@@ -5,6 +5,7 @@ from matplotlib import font_manager as fm
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
+SUBNAME_FONT_PATH = "fonts/Now-Bold.otf"
 
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
@@ -98,9 +99,12 @@ def draw_chart_artistic(
     asc_deg,
     house_cusps,
     planets,
+    color="white",
     bg_path="backgrounds/background.jpg",
     out_path="carta_natal.png"
 ):
+
+    print(color)
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
@@ -132,26 +136,26 @@ def draw_chart_artistic(
     # - anillo exterior de signos
     for r in [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE]:
         ax.plot(np.linspace(0, 2*np.pi, 360), [r]*360,
-                color="white", lw=0.8, alpha=0.8)
+                color=color, lw=0.8, alpha=0.8)
 
 
     # Casas (NO llegan al centro)
     for cusp in house_cusps:
         theta = np.deg2rad(cusp) - offset
         ax.plot([theta, theta], [RADIUS_ASPECT_LINES, RADIUS_HOUSES_CIRCLE],
-                color="white", lw=0.7)
+                color=color, lw=0.7)
 
     # Signos
     for i, sign in enumerate(ZODIAC_SIGNS):
         angle = np.deg2rad(i * 30 + 15) - offset
         ax.text(angle, RADIUS_SIGN_LABELS, sign,
-                color="white", fontsize=20,
+                color=color, fontsize=20,
                 ha="center", va="center")
 
         # líneas divisorias de signos
         div = np.deg2rad(i * 30) - offset
         ax.plot([div, div], [RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE],
-                color="white", lw=0.5, alpha=0.6)
+                color=color, lw=0.5, alpha=0.6)
 
     # Planetas
     for name_p, lon in planets.items():
@@ -162,7 +166,7 @@ def draw_chart_artistic(
             theta,
             RADIUS_PLANET_SYMBOLS, # offset radial para símbolos de planetas
             symbol,
-            color="white",
+            color=color,
             fontsize=16,
             ha="center",
             va="center"
@@ -172,7 +176,7 @@ def draw_chart_artistic(
     ax.plot(
         np.linspace(0, 2*np.pi, 360),
         [RADIUS_CUSP_RING] * 360,
-        color="white",
+        color=color,
         lw=0.8,
         alpha=0.9
     )
@@ -193,7 +197,7 @@ def draw_chart_artistic(
             theta,
             r_house_numbers,
             str(i + 1),
-            color="white",
+            color=color,
             fontsize=8,
             ha="center",
             va="center"
@@ -221,7 +225,7 @@ def draw_chart_artistic(
                 t2 = astro_angle(lon_j, asc_deg)
                 # Las líneas de aspecto se dibujan en el anillo interno de aspectos
                 ax.plot([t1, t2], [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSE_NUMBERS_RING],
-                        color="white", lw=2.1, alpha=0.6)
+                        color=color, lw=2.1, alpha=0.6)
 
     # ===================================
     # Nombre con fuente personalizada
@@ -234,14 +238,14 @@ def draw_chart_artistic(
         name,
         ha="center",
         fontproperties=name_font,
-        color="white"
+        color=color
     )
     fig.text(
         0.5, 0.83,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=40),
-        color="white"
+        fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=10),
+        color=color
     )
 
 
@@ -249,6 +253,7 @@ def draw_chart_artistic(
         ax=ax_bottom,
         asc_deg=asc_deg,
         planets=planets,
+        color=color,
     )
 
 
@@ -257,7 +262,7 @@ def draw_chart_artistic(
 
 
 
-def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
+def draw_special_points(ax, asc_deg, planets, color, spacing=0.3, y_pos=0.9):
     # Diccionario para mapear los nombres técnicos a los textos decorativos de la imagen
     display_names = {
         "Sol": "Signo\nSolar",
@@ -283,7 +288,7 @@ def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
             x_center + 0.05, y_pos,
             symbol,
             ha="left", va="center",
-            color="white", fontsize=fontsize * 1.5,
+            color=color, fontsize=fontsize * 1.5,
             transform=ax.transAxes
         )
 
@@ -292,7 +297,7 @@ def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
             x_center + 0.04, y_pos - 0.02,
             display_names[key],
             ha="right", va="bottom",
-            color="white",
+            color=color,
             linespacing=0.8,
             fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.7),
             transform=ax.transAxes
@@ -304,7 +309,7 @@ def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
             x_center + 0.04, y_pos - 0.05,
             sign_name,
             ha="right", va="top",
-            color="white",
-            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.5),
+            color=color,
+            fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=fontsize * 0.4),
             transform=ax.transAxes
         )

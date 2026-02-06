@@ -7,6 +7,79 @@ import time
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
+FONDOS = {
+    "Noche Estrellada": {"path": "backgrounds/background.jpg", "color": "white"},
+    "Nebulosa": {"path": "backgrounds/background2.jpg", "color": "white"},
+    "Minimalista rosa": {"path": "backgrounds/minimalista-rosa.jpg", "color": "black"},
+    #"Minimalista": "backgrounds/minimal.jpg",
+}
+
+
+def selector_fondos_galeria():
+    """
+    Dibuja una galería de imágenes en la sidebar y gestiona la selección.
+    Devuelve el diccionario de configuración del fondo elegido.
+    """
+    st.sidebar.header("🎨 Elige tu Estilo")
+
+    # --- INYECCIÓN DE CSS PARA EL ESTILO ---
+    # Esto hará que el botón seleccionado se vea oscuro/destacado
+    st.markdown("""
+        <style>
+        div.stButton > button:first-child {
+            border: 1px solid #444;
+            border-radius: 20px;
+        }
+        div.stButton > button[kind="primary"] {
+                    background-color: rgb(124, 75, 255);
+                    color: white;
+                    border: none;
+                    border-radius: 20px;
+                    transition: all 0.3s ease;
+                }
+        /* Estilo para el botón seleccionado (usando un selector de texto si es posible o simplemente el estado) */
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Inicializar el estado de selección si no existe
+    if 'fondo_seleccionado' not in st.session_state:
+        # Por defecto seleccionamos el primero del diccionario
+        st.session_state.fondo_seleccionado = list(FONDOS.keys())[0]
+
+    # Crear la cuadrícula de 2 columnas
+    cols = st.sidebar.columns(2)
+    nombres = list(FONDOS.keys())
+
+    for i, nombre in enumerate(nombres):
+        config = FONDOS[nombre]
+        ruta = config["path"]
+
+        with cols[i % 2]:
+            if os.path.exists(ruta):
+                # Dibujar miniatura
+                st.image(ruta, use_container_width=True)
+
+                # Lógica del botón debajo de la imagen
+                es_activo = st.session_state.fondo_seleccionado == nombre
+                tipo = "secondary" if es_activo else "secondary"
+                label = f"◉ {nombre}" if es_activo else f"○ {nombre}"
+
+                # Si se pulsa, actualizamos el estado y recargamos
+                if st.button(label, key=f"btn_{nombre}", use_container_width=True, type=tipo):
+                    st.session_state.fondo_seleccionado = nombre
+                    st.rerun()
+            else:
+                st.error(f"Falta: {nombre}")
+
+    st.sidebar.markdown("---")
+
+    # Retornar el diccionario de configuración del fondo que quedó seleccionado
+    return FONDOS[st.session_state.fondo_seleccionado]
+
+
+
+
+
 # --- INTERFAZ ---
 st.title("🌙 Generador de Carta Natal")
 
@@ -39,7 +112,11 @@ with st.sidebar:
 
         with col_min:
             minuto_v = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
-    btn_generar = st.button("Generar Carta")
+
+    st.markdown("---") # Separador visual
+    config_fondo = selector_fondos_galeria()
+
+    btn_generar = st.button("Generar Carta", use_container_width=True, type="primary")
 
 # --- EJECUCIÓN ---
 if btn_generar:
@@ -54,14 +131,15 @@ if btn_generar:
                 nombre,
                 lugar_completo,
                 fecha.year, fecha.month, fecha.day,
-                hora_v, minuto_v
+                hora_v, minuto_v,
+                config_fondo
             )
 
         if exito:
             # Mostramos la imagen que generó draw_chart_artistic
             # Nota: Asegúrate de que draw_chart_artistic guarde siempre con el mismo nombre
             if os.path.exists("carta_natal.png"):
-                st.image("carta_natal.png", caption=f"Carta Natal de {nombre}", use_container_width=True)
+                st.image("carta_natal.png", caption=f"Carta Natal de {nombre}", width='stretch')
 
                 # Botón de descarga
                 with open("carta_natal.png", "rb") as file:
@@ -76,3 +154,5 @@ if btn_generar:
 
     except Exception as e:
         st.error(f"Error al generar la carta: {e}")
+
+
