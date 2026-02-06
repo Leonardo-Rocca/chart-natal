@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from matplotlib import font_manager as fm
 
-NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
-SYMBOLS_NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
+SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
+NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
 
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
@@ -227,7 +227,7 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=50)
+    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=65)
 
     fig.text(
         0.5, 0.87,
@@ -240,7 +240,7 @@ def draw_chart_artistic(
         0.5, 0.83,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=20),
+        fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=40),
         color="white"
     )
 
@@ -294,7 +294,7 @@ def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
             ha="right", va="bottom",
             color="white",
             linespacing=0.8,
-            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.5),
+            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.7),
             transform=ax.transAxes
         )
 
@@ -305,6 +305,6 @@ def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
             sign_name,
             ha="right", va="top",
             color="white",
-            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.3),
+            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.5),
             transform=ax.transAxes
         )

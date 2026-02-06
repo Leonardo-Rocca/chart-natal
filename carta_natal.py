@@ -13,39 +13,40 @@ hour, minute = 17, 30
 # year, month, day = 1964, 5, 6
 # hour, minute = 00, 50
 
+def generar_carta_final(nombre, ciudad, year, month, day, hour, minute):
+    lat, lon, tz = obtener_datos_ciudad(ciudad)
+    hour_ut = hora_utc(year, month, day, hour, minute, tz)
+    jd = swe.julday(year, month, day, hour_ut)
 
-lat, lon, tz = obtener_datos_ciudad(ciudad)
-hour_ut = hora_utc(year, month, day, hour, minute, tz)
-jd = swe.julday(year, month, day, hour_ut)
-
-# Planetas
-planets = {}
-for body, name in [
-    (swe.SUN,"Sun"),
-    (swe.MOON,"Moon"),
-    (swe.MERCURY,"Mercury"),
-    (swe.VENUS,"Venus"),
-    (swe.MARS,"Mars"),
-    (swe.JUPITER,"Jupiter"),
-    (swe.SATURN,"Saturn"),
-    (swe.URANUS,"Uranus"),
-    (swe.NEPTUNE,"Neptune"),
-    (swe.PLUTO,"Pluto"),
-]:
-    data,_ = swe.calc(jd, body)
-    planets[name] = data[0]
+    # Planetas
+    planets = {}
+    for body, name in [
+        (swe.SUN,"Sun"),
+        (swe.MOON,"Moon"),
+        (swe.MERCURY,"Mercury"),
+        (swe.VENUS,"Venus"),
+        (swe.MARS,"Mars"),
+        (swe.JUPITER,"Jupiter"),
+        (swe.SATURN,"Saturn"),
+        (swe.URANUS,"Uranus"),
+        (swe.NEPTUNE,"Neptune"),
+        (swe.PLUTO,"Pluto"),
+    ]:
+        data,_ = swe.calc(jd, body)
+        planets[name] = data[0]
 
 
-# Casas Placidus
-house_cusps, ascmc = swe.houses(jd, lat, lon, b'P')
-asc = ascmc[0]
+    # Casas Placidus
+    house_cusps, ascmc = swe.houses(jd, lat, lon, b'P')
+    asc = ascmc[0]
 
-draw_chart_artistic(
-    name=nombre,
-    date_str=f"{day}/{month}/{year}",
-    asc_deg=asc,
-    house_cusps=house_cusps,
-    planets=planets,
-)
+    draw_chart_artistic(
+        name=nombre,
+        date_str=f"{day}/{month}/{year}",
+        asc_deg=asc,
+        house_cusps=house_cusps,
+        planets=planets,
+    )
 
-print("Imagen generada: carta_natal.png")
+    print("Imagen generada: carta_natal.png")
+    return True # Indica que terminó
