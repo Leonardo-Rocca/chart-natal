@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+from matplotlib import font_manager as fm
+
+NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
+SYMBOLS_NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
 
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
@@ -16,6 +20,65 @@ PLANET_SYMBOLS = {
     "Pluto": "♇"
 }
 
+# ============================
+# Constantes de radios / layout
+# ============================
+# Todos los radios están en la escala [0, 1] de matplotlib polar.
+
+# Radios base para anillos y líneas
+RADIUS_ASPECT_LINES   = 0.38   # donde se dibujan los aspectos (líneas entre planetas)
+RADIUS_HOUSES_CIRCLE  = 0.78   # círculo exterior de la zona de casas / planetas
+RADIUS_PLANETS_ORBIT  = 0.85   # órbita visual de planetas si hicieran un anillo propio (reservado)
+RADIUS_SIGNS_CIRCLE   = 0.98   # círculo exterior de los signos
+
+# Anillo de cúspides: reutiliza el mismo radio que los aspectos para mantener centro limpio
+RADIUS_CUSP_RING      = RADIUS_ASPECT_LINES
+
+# Nuevo anillo interno para numerar casas (entre cúspides y círculo de casas)
+RADIUS_HOUSE_NUMBERS_RING = 0.50
+HOUSE_NUMBER_INNER_OFFSET = 0.04  # cuánto se meten los números hacia el interior del anillo
+
+# ============================
+# PLANETAS (zona ampliada)
+# ============================
+RADIUS_PLANETS_INNER  = 0.62
+RADIUS_PLANETS_OUTER  = 0.82
+RADIUS_PLANET_SYMBOLS = 0.72   # centro del anillo planetario
+
+# ============================
+# Signos
+# ============================
+RADIUS_SIGNS_CIRCLE = 0.95
+SIGN_LABEL_OFFSET  = 0.08
+RADIUS_SIGN_LABELS = RADIUS_SIGNS_CIRCLE - SIGN_LABEL_OFFSET
+
+# Configuración de aspectos (en grados)
+ASPECT_ANGLES_DEG = {
+    "conjunction": 0,
+    "sextile": 60,
+    "square": 90,      # cuadratura
+    "trine": 120,
+    "opposition": 180,
+}
+
+# Orbes (en grados)
+ASPECT_ORB_GENERAL_DEG    = 5   # orbe para todos los aspectos en general
+ASPECT_ORB_LUMINARIES_DEG = 10  # orbe especial cuando intervienen Sol o Luna
+
+def signo_zodiacal(grados):
+    index = int(grados // 30)  # división entera
+    return ZODIAC_SIGNS[index]
+
+def get_sign_name(degrees):
+    nombres_signos = [
+        "Aries", "Tauro", "Géminis", "Cáncer",
+        "Leo", "Virgo", "Libra", "Escorpio",
+        "Sagitario", "Capricornio", "Acuario", "Piscis"
+    ]
+    # Dividimos los 360° en 12 partes de 30° cada una
+    indice = int((degrees % 360) / 30)
+    return nombres_signos[indice]
+
 def mid_angle(a1, a2):
     """Punto medio angular correcto (maneja wrap 360°)"""
     diff = (a2 - a1) % 360
@@ -24,9 +87,10 @@ def mid_angle(a1, a2):
 def astro_angle(deg, asc):
     """
     Convierte grados zodiacales a ángulo matplotlib,
-    corrigiendo espejo y rotando por ASC
+    usando la misma convención que para signos y planetas:
+    se resta el ASC para que éste quede en el oeste (izquierda).
     """
-    return np.deg2rad((180 - (deg - asc)) % 360)
+    return np.deg2rad((deg - asc) % 360)
 
 def draw_chart_artistic(
     name,
@@ -34,17 +98,20 @@ def draw_chart_artistic(
     asc_deg,
     house_cusps,
     planets,
-    bg_path="background.jpg",
+    bg_path="backgrounds/background.jpg",
     out_path="carta_natal.png"
 ):
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
-    ax.set_position([0.1, 0.12, 0.8, 0.8])
+    ax.set_position([0.085, 0.085, 0.83, 0.83])
     ax.set_ylim(0,1)
     ax.axis("off")
     ax.set_theta_zero_location("W")
     ax.set_theta_direction(1)
+
+    ax_bottom = fig.add_axes([0, 0, 1, 0.15])  # ocupa solo la parte inferior
+    ax_bottom.axis("off")
 
     offset = np.deg2rad(asc_deg)
 
@@ -57,35 +124,33 @@ def draw_chart_artistic(
     )
     fig.figimage(bg, xo=0, yo=0, zorder=-10)
 
-    # Radios
-    r_aspects = 0.50
-    r_houses  = 0.75
-    r_planets = 0.85
-    r_signs   = 0.95
-    r_cusp_ring = 0.50
-    r_planets_offset = 0.70
+    # Radios (definidos como constantes al inicio del archivo)
 
-
-    for r in [r_houses, r_signs]:
+    # Dibujamos:
+    # - anillo interno para números de casas
+    # - anillo exterior de casas / planetas
+    # - anillo exterior de signos
+    for r in [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE]:
         ax.plot(np.linspace(0, 2*np.pi, 360), [r]*360,
                 color="white", lw=0.8, alpha=0.8)
+
 
     # Casas (NO llegan al centro)
     for cusp in house_cusps:
         theta = np.deg2rad(cusp) - offset
-        ax.plot([theta, theta], [r_aspects, r_houses],
+        ax.plot([theta, theta], [RADIUS_ASPECT_LINES, RADIUS_HOUSES_CIRCLE],
                 color="white", lw=0.7)
 
     # Signos
     for i, sign in enumerate(ZODIAC_SIGNS):
         angle = np.deg2rad(i * 30 + 15) - offset
-        ax.text(angle, r_signs - 0.08, sign,
-                color="white", fontsize=28,
+        ax.text(angle, RADIUS_SIGN_LABELS, sign,
+                color="white", fontsize=20,
                 ha="center", va="center")
 
         # líneas divisorias de signos
         div = np.deg2rad(i * 30) - offset
-        ax.plot([div, div], [r_houses, r_signs],
+        ax.plot([div, div], [RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE],
                 color="white", lw=0.5, alpha=0.6)
 
     # Planetas
@@ -95,7 +160,7 @@ def draw_chart_artistic(
 
         ax.text(
             theta,
-            r_planets_offset, #offset agregado por leo
+            RADIUS_PLANET_SYMBOLS, # offset radial para símbolos de planetas
             symbol,
             color="white",
             fontsize=16,
@@ -106,7 +171,7 @@ def draw_chart_artistic(
     # aro final
     ax.plot(
         np.linspace(0, 2*np.pi, 360),
-        [r_cusp_ring] * 360,
+        [RADIUS_CUSP_RING] * 360,
         color="white",
         lw=0.8,
         alpha=0.9
@@ -115,7 +180,8 @@ def draw_chart_artistic(
     # =========================
     # Números de casas (I–XII)
     # =========================
-    r_house_numbers = (r_cusp_ring + r_houses) / 2
+    # Se colocan un poco dentro del anillo interno de casas
+    r_house_numbers = RADIUS_HOUSE_NUMBERS_RING - HOUSE_NUMBER_INNER_OFFSET
     for i in range(12):
         cusp_start = house_cusps[i]
         cusp_end   = house_cusps[(i + 1) % 12]
@@ -128,30 +194,117 @@ def draw_chart_artistic(
             r_house_numbers,
             str(i + 1),
             color="white",
-            fontsize=12,
+            fontsize=8,
             ha="center",
             va="center"
         )
 
 
     # Aspectos (centro limpio)
-    aspects = [0,60,90,120,180]
+    aspect_angles = list(ASPECT_ANGLES_DEG.values())
     plist = list(planets.items())
 
     for i in range(len(plist)):
         for j in range(i+1, len(plist)):
-            d = abs((plist[i][1]-plist[j][1]+180)%360-180)
-            if any(abs(d-a)<=4 for a in aspects):
-                t1 = astro_angle(plist[i][1], asc_deg)
-                t2 = astro_angle(plist[j][1], asc_deg)
-                ax.plot([t1,t2],[r_aspects,r_aspects],
-                        color="white", lw=0.6, alpha=0.6)
+            name_i, lon_i = plist[i]
+            name_j, lon_j = plist[j]
 
-    # Texto
-    fig.text(0.5,0.93,name,ha="center",
-             fontsize=20,color="white")
-    fig.text(0.5,0.90,date_str,ha="center",
-             fontsize=11,color="white")
+            d = abs((lon_i - lon_j + 180) % 360 - 180)
+
+            # Orbe más amplio si intervienen Sol o Luna
+            orb = ASPECT_ORB_LUMINARIES_DEG if (
+                name_i in ("Sun", "Moon") or name_j in ("Sun", "Moon")
+            ) else ASPECT_ORB_GENERAL_DEG
+
+            if any(abs(d - a) <= orb for a in aspect_angles):
+                t1 = astro_angle(lon_i, asc_deg)
+                t2 = astro_angle(lon_j, asc_deg)
+                # Las líneas de aspecto se dibujan en el anillo interno de aspectos
+                ax.plot([t1, t2], [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSE_NUMBERS_RING],
+                        color="white", lw=2.1, alpha=0.6)
+
+    # ===================================
+    # Nombre con fuente personalizada
+    # ===================================
+
+    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=50)
+
+    fig.text(
+        0.5, 0.87,
+        name,
+        ha="center",
+        fontproperties=name_font,
+        color="white"
+    )
+    fig.text(
+        0.5, 0.83,
+        date_str,
+        ha="center",
+        fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=20),
+        color="white"
+    )
+
+
+    draw_special_points(
+        ax=ax_bottom,
+        asc_deg=asc_deg,
+        planets=planets,
+    )
+
 
     plt.savefig(out_path, dpi=300)
     plt.close()
+
+
+
+def draw_special_points(ax, asc_deg, planets, spacing=0.3, y_pos=0.9):
+    # Diccionario para mapear los nombres técnicos a los textos decorativos de la imagen
+    display_names = {
+        "Sol": "Signo\nSolar",
+        "Luna": "Signo\nLunar",
+        "Asc": "Signo\nAscendente"
+    }
+
+    special_points = [
+        ("Sol", signo_zodiacal(planets["Sun"]), get_sign_name(planets["Sun"])),
+        ("Luna", signo_zodiacal(planets["Moon"]), get_sign_name(planets["Moon"])),
+        ("Asc", signo_zodiacal(asc_deg), get_sign_name(asc_deg))
+    ]
+
+    n = len(special_points)
+    fontsize = 45
+
+    for i, (key, symbol, sign_name) in enumerate(special_points):
+        # Calculamos el centro de cada grupo
+        x_center = 0.5 - spacing*(n-1)/2 + i*spacing
+
+        # 1. DIBUJAR EL SÍMBOLO (Lado Derecho)
+        ax.text(
+            x_center + 0.05, y_pos,
+            symbol,
+            ha="left", va="center",
+            color="white", fontsize=fontsize * 1.5,
+            transform=ax.transAxes
+        )
+
+        # 2. DIBUJAR "Signo Solar/Lunar/etc" (Arriba Izquierda)
+        ax.text(
+            x_center + 0.04, y_pos - 0.02,
+            display_names[key],
+            ha="right", va="bottom",
+            color="white",
+            linespacing=0.8,
+            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.5),
+            transform=ax.transAxes
+        )
+
+
+        # 3. DIBUJAR EL NOMBRE DEL SIGNO (Abajo Izquierda - Ej: "Virgo")
+        ax.text(
+            x_center + 0.04, y_pos - 0.05,
+            sign_name,
+            ha="right", va="top",
+            color="white",
+            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.3),
+            transform=ax.transAxes
+        )

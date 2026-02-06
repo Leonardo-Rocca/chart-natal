@@ -1,15 +1,44 @@
 from geopy.geocoders import Nominatim
-from geopy.exc import GeocoderTimedOut
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 from timezonefinder import TimezoneFinder
 import pytz
 from datetime import datetime
 
-def obtener_datos_ciudad(ciudad):
-    geolocator = Nominatim(user_agent="carta-natal-app")
-    try:
-        location = geolocator.geocode(ciudad)
-    except GeocoderTimedOut:
-        raise RuntimeError("Geocoder timeout. Intente nuevamente.")
+def obtener_datos_ciudad(ciudad, max_retries=3, timeout=10):
+    """
+    Devuelve (lat, lon, tz) para una ciudad.
+    Incluye reintentos y timeout configurable para el servicio de geocodificación.
+    """
+
+    # Caso especial: evitar llamada al geolocator para Buenos Aires
+    if ciudad.strip().lower() == "buenos aires, argentina":
+        lat = -34.6095579
+        lon = -58.3887904
+
+        tf = TimezoneFinder()
+        timezone_str = tf.timezone_at(lat=lat, lng=lon)
+
+        if not timezone_str:
+            raise ValueError("No se pudo determinar la zona horaria")
+
+        tz = pytz.timezone(timezone_str)
+        return lat, lon, tz
+
+    geolocator = Nominatim(user_agent="carta-natal-app", timeout=timeout)
+
+    last_exception = None
+    for _ in range(max_retries):
+        try:
+            location = geolocator.geocode(ciudad)
+            break
+        except GeocoderTimedOut as exc:
+            last_exception = exc
+            continue
+        except GeocoderServiceError as exc:
+            raise RuntimeError(f"Error del servicio de geocodificación: {exc}")
+    else:
+        # Solo se ejecuta si el bucle termina sin hacer break
+        raise RuntimeError("Geocoder timeout tras varios intentos. Intente nuevamente.")
 
     if not location:
         raise ValueError("Ciudad no encontrada")

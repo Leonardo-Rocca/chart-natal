@@ -8,6 +8,12 @@ ciudad = "Buenos Aires, Argentina"
 year, month, day = 1994, 9, 19
 hour, minute = 17, 30
 
+# nombre = "Andi"
+# ciudad = "Buenos Aires, Argentina"
+# year, month, day = 1964, 5, 6
+# hour, minute = 00, 50
+
+
 lat, lon, tz = obtener_datos_ciudad(ciudad)
 hour_ut = hora_utc(year, month, day, hour, minute, tz)
 jd = swe.julday(year, month, day, hour_ut)
@@ -39,7 +45,7 @@ draw_chart_artistic(
     date_str=f"{day}/{month}/{year}",
     asc_deg=asc,
     house_cusps=house_cusps,
-    planets=planets
+    planets=planets,
 )
 
 print("Imagen generada: carta_natal.png")
