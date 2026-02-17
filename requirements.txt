@@ -1,8 +1,8 @@
 streamlit
+pycountry
 pyswisseph
 geopy
 timezonefinder
 pytz
-pycountry
 matplotlib
 pillow
