@@ -1,0 +1,8 @@
+streamlit
+pyswisseph
+geopy
+timezonefinder
+pytz
+pycountry
+matplotlib
+pillow
