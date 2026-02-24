@@ -11,6 +11,9 @@ FONDOS = {
     "Noche Estrellada": {"path": "backgrounds/background.jpg", "color": "white"},
     "Nebulosa": {"path": "backgrounds/background2.jpg", "color": "white"},
     "Minimalista rosa": {"path": "backgrounds/minimalista-rosa.jpg", "color": "black"},
+    "Negro": {"path": "backgrounds/black.jpg", "color": "white"},
+    "Verde": {"path": "backgrounds/green.jpg", "color": "white"},
+    "Azul estrella": {"path": "backgrounds/blue-stars.jpg", "color": "white"},
     #"Minimalista": "backgrounds/minimal.jpg",
 }
 
