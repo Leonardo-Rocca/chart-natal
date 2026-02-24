@@ -11,6 +11,8 @@ st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
 MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
 NOW_REGULAR = "fonts/Now-Regular.otf"
+FUTURA = "fonts/FuturaCyrillicLight.ttf"
+NIXIE_ONE = "fonts/NixieOne.ttf"
 
 FONDOS: List[Fondo] = [
     {"id": "noche_estrellada", "name": "Noche Estrellada", "path": "backgrounds/background.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
@@ -18,7 +20,7 @@ FONDOS: List[Fondo] = [
     {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "black", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
     {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
     {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white", "name_font": FUTURA, "subname_font": NIXIE_ONE},
 ]
 
 def selector_fondos_galeria() -> Fondo:

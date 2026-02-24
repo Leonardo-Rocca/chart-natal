@@ -232,17 +232,17 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=name_font_path, size=80)
+    name_font = fm.FontProperties(fname=name_font_path, size=76)
 
     fig.text(
-        0.5, 0.87,
+        0.5, 0.84,
         name,
         ha="center",
         fontproperties=name_font,
         color=color
     )
     fig.text(
-        0.5, 0.83,
+        0.5, 0.81,
         date_str,
         ha="center",
         fontproperties=fm.FontProperties(fname=subname_font_path, size=15),
@@ -264,13 +264,12 @@ def draw_chart_artistic(
     plt.close()
 
 
-
-def draw_special_points(ax, asc_deg, planets, color,name_font_path, subname_font_path, spacing=0.28, y_pos=0.9):
-    # Diccionario para mapear los nombres técnicos a los textos decorativos de la imagen
+def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_font_path, spacing=0.28, y_pos=1.25):
+    # Diccionario para textos decorativos
     display_names = {
         "Sol": "Signo\nSolar",
         "Luna": "Signo\nLunar",
-        "Asc": "Signo\nAscendente"
+        "Asc": "Signo\nAsc."
     }
 
     special_points = [
@@ -279,39 +278,39 @@ def draw_special_points(ax, asc_deg, planets, color,name_font_path, subname_font
         ("Asc", signo_zodiacal(asc_deg), get_sign_name(asc_deg))
     ]
 
-    n = len(special_points)
     fontsize = 45
+    # Definimos un margen izquierdo fijo para que no floten en el centro
+    margin_left = 0.12
 
     for i, (key, symbol, sign_name) in enumerate(special_points):
-        # Calculamos el centro de cada grupo
-        x_center = spacing*(n-1)/2 + i*spacing - 0.10
+        # Posición base de cada grupo alineada desde la izquierda
+        x_group = margin_left + (i * spacing)
 
-        # 1. DIBUJAR EL SÍMBOLO (Lado Derecho)
+        # 1. DIBUJAR EL SÍMBOLO (Ahora a la derecha del texto)
         ax.text(
-            x_center + 0.05, y_pos - 0.2,
+            x_group + 0.08, y_pos + 0.06, # Ajuste de posición relativa al texto
             symbol,
-            ha="left", va="bottom",
+            ha="left", va="center",
             color=color, fontsize=fontsize * 1.4,
             transform=ax.transAxes
         )
 
-        # 2. DIBUJAR "Signo Solar/Lunar/etc" (Arriba Izquierda)
+        # 2. DIBUJAR "Signo Solar/Lunar/etc" (Alineado a la izquierda)
         ax.text(
-            x_center + 0.04, y_pos,
+            x_group, y_pos,
             display_names[key],
-            ha="right", va="bottom",
+            ha="left", va="bottom", # Alineación horizontal a la izquierda
             color=color,
             linespacing=0.8,
-            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.7),
+            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.5),
             transform=ax.transAxes
         )
 
-
-        # 3. DIBUJAR EL NOMBRE DEL SIGNO (Abajo Izquierda - Ej: "Virgo")
+        # 3. DIBUJAR EL NOMBRE DEL SIGNO (Debajo, alineado a la izquierda)
         ax.text(
-            x_center, y_pos,
+            x_group, y_pos - 0.02, # Justo debajo del texto principal
             sign_name,
-            ha="center", va="top",
+            ha="left", va="top", # Alineación horizontal a la izquierda
             color=color,
             fontproperties=fm.FontProperties(fname=subname_font_path, size=fontsize * 0.3),
             transform=ax.transAxes
