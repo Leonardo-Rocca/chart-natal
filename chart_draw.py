@@ -5,7 +5,7 @@ from matplotlib import font_manager as fm
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
-SUBNAME_FONT_PATH = "fonts/Now-Bold.otf"
+SUBNAME_FONT_PATH = "fonts/Now-Regular.otf"
 
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
@@ -114,7 +114,7 @@ def draw_chart_artistic(
     ax.set_theta_zero_location("W")
     ax.set_theta_direction(1)
 
-    ax_bottom = fig.add_axes([0, 0, 1, 0.15])  # ocupa solo la parte inferior
+    ax_bottom = fig.add_axes([0, -0.05, 1, 0.15])  # ocupa solo la parte inferior
     ax_bottom.axis("off")
 
     offset = np.deg2rad(asc_deg)
@@ -231,7 +231,7 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=65)
+    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=80)
 
     fig.text(
         0.5, 0.87,
@@ -244,7 +244,7 @@ def draw_chart_artistic(
         0.5, 0.83,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=10),
+        fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=15),
         color=color
     )
 
@@ -306,10 +306,10 @@ def draw_special_points(ax, asc_deg, planets, color, spacing=0.3, y_pos=0.9):
 
         # 3. DIBUJAR EL NOMBRE DEL SIGNO (Abajo Izquierda - Ej: "Virgo")
         ax.text(
-            x_center + 0.04, y_pos - 0.05,
+            x_center, y_pos,
             sign_name,
-            ha="right", va="top",
+            ha="center", va="top",
             color=color,
-            fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=fontsize * 0.4),
+            fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=fontsize * 0.3),
             transform=ax.transAxes
         )
