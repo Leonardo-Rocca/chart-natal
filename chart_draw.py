@@ -5,8 +5,6 @@ from matplotlib import font_manager as fm
 from types_config import Fondo
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
-NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
-SUBNAME_FONT_PATH = "fonts/Now-Regular.otf"
 
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
@@ -106,6 +104,8 @@ def draw_chart_artistic(
 ):
     color = config_fondo["color"]
     bg_path = config_fondo["path"]
+    name_font_path = config_fondo["name_font"]
+    subname_font_path = config_fondo["subname_font"]
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
@@ -232,7 +232,7 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=NAME_FONT_PATH, size=80)
+    name_font = fm.FontProperties(fname=name_font_path, size=80)
 
     fig.text(
         0.5, 0.87,
@@ -245,7 +245,7 @@ def draw_chart_artistic(
         0.5, 0.83,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=15),
+        fontproperties=fm.FontProperties(fname=subname_font_path, size=15),
         color=color
     )
 
@@ -255,6 +255,8 @@ def draw_chart_artistic(
         asc_deg=asc_deg,
         planets=planets,
         color=color,
+        name_font_path=name_font_path,
+        subname_font_path=subname_font_path,
     )
 
 
@@ -263,7 +265,7 @@ def draw_chart_artistic(
 
 
 
-def draw_special_points(ax, asc_deg, planets, color, spacing=0.28, y_pos=0.9):
+def draw_special_points(ax, asc_deg, planets, color,name_font_path, subname_font_path, spacing=0.28, y_pos=0.9):
     # Diccionario para mapear los nombres técnicos a los textos decorativos de la imagen
     display_names = {
         "Sol": "Signo\nSolar",
@@ -300,7 +302,7 @@ def draw_special_points(ax, asc_deg, planets, color, spacing=0.28, y_pos=0.9):
             ha="right", va="bottom",
             color=color,
             linespacing=0.8,
-            fontproperties=fm.FontProperties(fname=NAME_FONT_PATH, size=fontsize * 0.7),
+            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.7),
             transform=ax.transAxes
         )
 
@@ -311,6 +313,6 @@ def draw_special_points(ax, asc_deg, planets, color, spacing=0.28, y_pos=0.9):
             sign_name,
             ha="center", va="top",
             color=color,
-            fontproperties=fm.FontProperties(fname=SUBNAME_FONT_PATH, size=fontsize * 0.3),
+            fontproperties=fm.FontProperties(fname=subname_font_path, size=fontsize * 0.3),
             transform=ax.transAxes
         )

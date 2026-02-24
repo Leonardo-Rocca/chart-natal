@@ -9,14 +9,16 @@ from types_config import Fondo
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
+MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
+NOW_REGULAR = "fonts/Now-Regular.otf"
 
 FONDOS: List[Fondo] = [
-    {"id": "noche_estrellada", "name": "Noche Estrellada", "path": "backgrounds/background.jpg", "color": "white"},
-    {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white"},
-    {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "black"},
-    {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white"},
-    {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white"},
-    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white"},
+    {"id": "noche_estrellada", "name": "Noche Estrellada", "path": "backgrounds/background.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "black", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
+    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
 ]
 
 def selector_fondos_galeria() -> Fondo:
