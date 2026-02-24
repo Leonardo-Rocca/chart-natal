@@ -72,7 +72,45 @@ def selector_fondos_galeria() -> Fondo:
     seleccionado = next(f for f in FONDOS if f["id"] == st.session_state.fondo_id_seleccionado)
     return seleccionado
 
+import streamlit as st
 
+def check_password():
+    """Devuelve True si el usuario introdujo la contraseña correcta."""
+
+    def password_entered():
+        """Comprueba si la contraseña coincide."""
+        if st.session_state["password"] == "1234":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # Eliminar la contraseña del estado por seguridad
+        else:
+            st.session_state["password_correct"] = False
+
+    # Si ya se autenticó antes, retornar True
+    if st.session_state.get("password_correct", False):
+        return True
+
+    # Mostrar formulario de entrada de contraseña
+    st.title("🔒 Acceso Restringido")
+    st.text_input(
+        "Introduce la contraseña para acceder al generador:",
+        type="password",
+        on_change=password_entered,
+        key="password"
+    )
+
+    if "password_correct" in st.session_state:
+        st.error("😕 Contraseña incorrecta")
+
+    return False
+
+
+
+
+# --- EJECUCIÓN PRINCIPAL ---
+if check_password():
+    st.success("Acceso concedido")
+else:
+    st.stop() # Detiene la ejecución del resto de la app
 
 
 # --- INTERFAZ ---

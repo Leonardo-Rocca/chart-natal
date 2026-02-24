@@ -6,3 +6,4 @@ timezonefinder
 pytz
 matplotlib
 pillow
+numpy
