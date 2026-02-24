@@ -4,28 +4,25 @@ from carta_natal import generar_carta_final # Importamos tu función
 from datetime import datetime
 import os
 import time
+from typing import List
+from types_config import Fondo
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
-FONDOS = {
-    "Noche Estrellada": {"path": "backgrounds/background.jpg", "color": "white"},
-    "Nebulosa": {"path": "backgrounds/background2.jpg", "color": "white"},
-    "Minimalista rosa": {"path": "backgrounds/minimalista-rosa.jpg", "color": "black"},
-    "Negro": {"path": "backgrounds/black.jpg", "color": "white"},
-    "Verde": {"path": "backgrounds/green.jpg", "color": "white"},
-    "Azul estrella": {"path": "backgrounds/blue-stars.jpg", "color": "white"},
-    #"Minimalista": "backgrounds/minimal.jpg",
-}
 
+FONDOS: List[Fondo] = [
+    {"id": "noche_estrellada", "name": "Noche Estrellada", "path": "backgrounds/background.jpg", "color": "white"},
+    {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white"},
+    {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "black"},
+    {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white"},
+    {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white"},
+    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white"},
+]
 
-def selector_fondos_galeria():
-    """
-    Dibuja una galería de imágenes en la sidebar y gestiona la selección.
-    Devuelve el diccionario de configuración del fondo elegido.
-    """
+def selector_fondos_galeria() -> Fondo:
     st.sidebar.header("🎨 Elige tu Estilo")
 
-    # --- INYECCIÓN DE CSS PARA EL ESTILO ---
+   # --- INYECCIÓN DE CSS PARA EL ESTILO ---
     # Esto hará que el botón seleccionado se vea oscuro/destacado
     st.markdown("""
         <style>
@@ -43,42 +40,33 @@ def selector_fondos_galeria():
         /* Estilo para el botón seleccionado (usando un selector de texto si es posible o simplemente el estado) */
         </style>
     """, unsafe_allow_html=True)
+    # Inicializar el estado usando el 'id' del primer fondo
+    if 'fondo_id_seleccionado' not in st.session_state:
+        st.session_state.fondo_id_seleccionado = FONDOS[0]["id"]
 
-    # Inicializar el estado de selección si no existe
-    if 'fondo_seleccionado' not in st.session_state:
-        # Por defecto seleccionamos el primero del diccionario
-        st.session_state.fondo_seleccionado = list(FONDOS.keys())[0]
-
-    # Crear la cuadrícula de 2 columnas
     cols = st.sidebar.columns(2)
-    nombres = list(FONDOS.keys())
 
-    for i, nombre in enumerate(nombres):
-        config = FONDOS[nombre]
-        ruta = config["path"]
-
+    for i, fondo in enumerate(FONDOS):
         with cols[i % 2]:
-            if os.path.exists(ruta):
-                # Dibujar miniatura
-                st.image(ruta, use_container_width=True)
+            if os.path.exists(fondo["path"]):
+                st.image(fondo["path"], use_container_width=True)
 
-                # Lógica del botón debajo de la imagen
-                es_activo = st.session_state.fondo_seleccionado == nombre
-                tipo = "secondary" if es_activo else "secondary"
-                label = f"◉ {nombre}" if es_activo else f"○ {nombre}"
+                es_activo = st.session_state.fondo_id_seleccionado == fondo["id"]
+                # Usamos tipo primary para el botón seleccionado
+                tipo = "primary" if es_activo else "secondary"
+                label = f"◉ {fondo['name']}" if es_activo else f"○ {fondo['name']}"
 
-                # Si se pulsa, actualizamos el estado y recargamos
-                if st.button(label, key=f"btn_{nombre}", use_container_width=True, type=tipo):
-                    st.session_state.fondo_seleccionado = nombre
+                if st.button(label, key=f"btn_{fondo['id']}", use_container_width=True, type=tipo):
+                    st.session_state.fondo_id_seleccionado = fondo["id"]
                     st.rerun()
             else:
-                st.error(f"Falta: {nombre}")
+                st.error(f"Falta: {fondo['name']}")
 
     st.sidebar.markdown("---")
 
-    # Retornar el diccionario de configuración del fondo que quedó seleccionado
-    return FONDOS[st.session_state.fondo_seleccionado]
-
+    # Buscamos el objeto completo que coincida con el ID seleccionado
+    seleccionado = next(f for f in FONDOS if f["id"] == st.session_state.fondo_id_seleccionado)
+    return seleccionado
 
 
 

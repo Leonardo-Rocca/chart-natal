@@ -1,6 +1,8 @@
 import swisseph as swe
 from location import obtener_datos_ciudad, hora_utc
 from chart_draw import draw_chart_artistic
+from types_config import Fondo
+
 
 BODIES = [
     (swe.SUN, "Sun"),
@@ -15,7 +17,16 @@ BODIES = [
     (swe.PLUTO, "Pluto"),
 ]
 
-def generar_carta_final(nombre, ciudad, year, month, day, hour, minute, config_fondo):
+def generar_carta_final(
+    nombre: str,
+    ciudad: str,
+    year: int,
+    month: int,
+    day: int,
+    hour: int,
+    minute: int,
+    config_fondo: Fondo
+) -> bool:
     """
     Calcula las posiciones astronómicas y genera la imagen de la carta natal.
     Maneja la conversión UTC considerando cambios de fecha.
@@ -44,8 +55,7 @@ def generar_carta_final(nombre, ciudad, year, month, day, hour, minute, config_f
             asc_deg=asc,
             house_cusps=house_cusps,
             planets=planets,
-            bg_path=config_fondo["path"],
-            color=config_fondo["color"]
+            config_fondo=config_fondo
         )
 
         print(f"✨ Carta generada exitosamente para {nombre} ({ciudad})")

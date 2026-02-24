@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from matplotlib import font_manager as fm
+from types_config import Fondo
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 NAME_FONT_PATH = "fonts/MoonTime-Regular-1.ttf"
@@ -93,18 +94,18 @@ def astro_angle(deg, asc):
     """
     return np.deg2rad((deg - asc) % 360)
 
-def draw_chart_artistic(
-    name,
-    date_str,
-    asc_deg,
-    house_cusps,
-    planets,
-    color="white",
-    bg_path="backgrounds/background.jpg",
-    out_path="carta_natal.png"
-):
 
-    print(color)
+def draw_chart_artistic(
+    name: str,
+    date_str: str,
+    asc_deg: float,
+    house_cusps: list,
+    planets: dict,
+    config_fondo: Fondo, # Reemplaza bg_path y color
+    out_path: str = "carta_natal.png"
+):
+    color = config_fondo["color"]
+    bg_path = config_fondo["path"]
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
