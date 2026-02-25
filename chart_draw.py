@@ -299,7 +299,7 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
 
         # 1. DIBUJAR EL SÍMBOLO (Ahora a la derecha del texto)
         ax.text(
-            x_group + 0.08, y_pos + 0.06, # Ajuste de posición relativa al texto
+            x_group + 0.09, y_pos + 0.06, # Ajuste de posición relativa al texto
             symbol,
             ha="left", va="center",
             color=color, fontsize=fontsize * 1.4,
