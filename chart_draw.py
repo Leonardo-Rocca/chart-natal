@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from matplotlib import font_manager as fm
-from types_config import Fondo
+from config import FONT_STYLES, FontID, Fondo
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
@@ -99,13 +99,23 @@ def draw_chart_artistic(
     asc_deg: float,
     house_cusps: list,
     planets: dict,
-    config_fondo: Fondo, # Reemplaza bg_path y color
+    config_fondo: Fondo,
     out_path: str = "carta_natal.png"
 ):
     color = config_fondo["color"]
     bg_path = config_fondo["path"]
-    name_font_path = config_fondo["name_font"]
-    subname_font_path = config_fondo["subname_font"]
+    name_font = config_fondo["name_font"]
+    subname_font = config_fondo["subname_font"]
+    name_font_path = name_font.value
+    subname_font_path = subname_font.value
+
+    # .get() with fallback NOW_REGULAR
+    style = FONT_STYLES.get(name_font, FONT_STYLES[FontID.NOW_REGULAR])
+    size_title = style["title"]
+    size_sym = style["symbol"]
+
+    sub_style = FONT_STYLES.get(subname_font, FONT_STYLES[FontID.NOW_REGULAR])
+    size_sub = sub_style["subtitle"]
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
@@ -232,7 +242,7 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=name_font_path, size=76)
+    name_font = fm.FontProperties(fname=name_font_path, size=size_title)
 
     fig.text(
         0.5, 0.84,
@@ -245,7 +255,7 @@ def draw_chart_artistic(
         0.5, 0.81,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=subname_font_path, size=15),
+        fontproperties=fm.FontProperties(fname=subname_font_path, size=size_sub),
         color=color
     )
 
@@ -257,6 +267,7 @@ def draw_chart_artistic(
         color=color,
         name_font_path=name_font_path,
         subname_font_path=subname_font_path,
+        size_sym=size_sym,
     )
 
 
@@ -264,7 +275,7 @@ def draw_chart_artistic(
     plt.close()
 
 
-def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_font_path, spacing=0.28, y_pos=1.25):
+def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_font_path, size_sym, spacing=0.28, y_pos=1.25):
     # Diccionario para textos decorativos
     display_names = {
         "Sol": "Signo\nSolar",
@@ -278,7 +289,7 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
         ("Asc", signo_zodiacal(asc_deg), get_sign_name(asc_deg))
     ]
 
-    fontsize = 45
+    fontsize = size_sym
     # Definimos un margen izquierdo fijo para que no floten en el centro
     margin_left = 0.12
 
@@ -302,7 +313,7 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
             ha="left", va="bottom", # Alineación horizontal a la izquierda
             color=color,
             linespacing=0.8,
-            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.5),
+            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.55),
             transform=ax.transAxes
         )
 

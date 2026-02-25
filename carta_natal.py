@@ -1,7 +1,7 @@
 import swisseph as swe
 from location import obtener_datos_ciudad, hora_utc
 from chart_draw import draw_chart_artistic
-from types_config import Fondo
+from config import Fondo
 
 
 BODIES = [

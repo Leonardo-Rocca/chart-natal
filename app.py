@@ -5,27 +5,10 @@ from datetime import datetime
 import os
 import time
 from typing import List
-from types_config import Fondo
+from config import Fondo, FONDOS
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
-MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
-NOW_REGULAR = "fonts/Now-Regular.otf"
-FUTURA = "fonts/FuturaCyrillicLight.ttf"
-NIXIE_ONE = "fonts/NixieOne.ttf"
-SEASONS = "fonts/The Seasons Regular.ttf"
-WEDGES = "fonts/Wedges.ttf"
-
-FONDOS: List[Fondo] = [
-    {"id": "noche_estrellada", "name": "Noche Estrellada", "path": "backgrounds/background.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "#fb868c", "name_font": FUTURA, "subname_font": NOW_REGULAR},
-    {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white", "name_font": FUTURA, "subname_font": NIXIE_ONE},
-    {"id": "gold", "name": "Gold", "path": "backgrounds/gold.jpg", "color": "#d4b68e", "name_font": MOON_TIME_REGULAR, "subname_font": NOW_REGULAR},
-    {"id": "beige", "name": "Beige", "path": "backgrounds/beige.jpg", "color": "#805010", "name_font": SEASONS, "subname_font": NOW_REGULAR},
-]
 
 def selector_fondos_galeria() -> Fondo:
     st.sidebar.header("🎨 Elige tu Estilo")
