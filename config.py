@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, Dict
+from typing import TypedDict, Dict, List
 
 # 1. Definimos el "Símbolo" (Enum)
 class FontID(Enum):
