@@ -45,17 +45,17 @@ FONT_STYLES: Dict[FontID, Dict[str, int]] = {
     }
 }
 
-class Fondo(TypedDict):
-    id: str      # Un identificador único (slug)
-    name: str    # Nombre para mostrar en la UI
-    path: str    # Ruta al archivo
-    color: str   # Color de fuente (white/black)
-    name_font: FontID    # Fuente del nombre
-    subname_font: FontID # Fuente de la fecha/subtítulo
+class Background(TypedDict):
+    id: str
+    name: str
+    path: str
+    color: str
+    name_font: FontID
+    subname_font: FontID
 
 
 
-FONDOS: List[Fondo] = [
+BACKGROUNDS: List[Background] = [
     {"id": "noche_estrellada", "name": "Noche del Lobo", "path": "backgrounds/background.jpg", "color": "white",
         "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.NOW_REGULAR},
     {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white",

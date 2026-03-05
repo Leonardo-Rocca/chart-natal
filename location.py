@@ -4,11 +4,11 @@ from timezonefinder import TimezoneFinder
 import pytz
 from datetime import datetime
 
-def obtener_datos_ciudad(ciudad, max_retries=3, timeout=10):
-    """Devuelve (lat, lon, tz) para una ciudad."""
+def get_city_data(city, max_retries=3, timeout=10):
+    """Returns (lat, lon, tz) for a city."""
 
-    # Caso especial: Buenos Aires
-    if ciudad.strip().lower() == "buenos aires, argentina":
+    # Special case: Buenos Aires
+    if city.strip().lower() == "buenos aires, argentina":
         lat, lon = -34.6095579, -58.3887904
         tf = TimezoneFinder()
         timezone_str = tf.timezone_at(lat=lat, lng=lon)
@@ -18,35 +18,31 @@ def obtener_datos_ciudad(ciudad, max_retries=3, timeout=10):
 
     for _ in range(max_retries):
         try:
-            location = geolocator.geocode(ciudad)
+            location = geolocator.geocode(city)
             if location:
                 lat, lon = location.latitude, location.longitude
                 tf = TimezoneFinder()
                 timezone_str = tf.timezone_at(lat=lat, lng=lon)
                 if not timezone_str:
-                    raise ValueError("No se pudo determinar la zona horaria")
+                    raise ValueError("Could not determine timezone")
                 return lat, lon, pytz.timezone(timezone_str)
             break
         except (GeocoderTimedOut, GeocoderServiceError):
             continue
 
-    raise ValueError(f"No se pudo encontrar la ciudad: {ciudad}")
+    raise ValueError(f"Could not find city: {city}")
 
-def hora_utc(year, month, day, hour, minute, tz):
+def to_utc(year, month, day, hour, minute, tz):
     """
-    Convierte hora local a UTC devolviendo año, mes, día y hora decimal.
-    Esto es CRUCIAL para nacimientos cerca de la medianoche (como el caso de Lima).
+    Converts local time to UTC, returning year, month, day and decimal hour.
+    Critical for births near midnight.
     """
-    # 1. Crear objeto datetime local
     local_dt = tz.localize(datetime(year, month, day, hour, minute))
-
-    # 2. Convertir a UTC
     utc_dt = local_dt.astimezone(pytz.utc)
 
-    # 3. Retornar los 4 componentes necesarios para swisseph
-    y_u = utc_dt.year
-    m_u = utc_dt.month
-    d_u = utc_dt.day
-    h_u = utc_dt.hour + utc_dt.minute / 60.0 + utc_dt.second / 3600.0
+    year_utc = utc_dt.year
+    month_utc = utc_dt.month
+    day_utc = utc_dt.day
+    hour_utc = utc_dt.hour + utc_dt.minute / 60.0 + utc_dt.second / 3600.0
 
-    return y_u, m_u, d_u, h_u
+    return year_utc, month_utc, day_utc, hour_utc

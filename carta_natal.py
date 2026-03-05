@@ -1,7 +1,7 @@
 import swisseph as swe
-from location import obtener_datos_ciudad, hora_utc
+from location import get_city_data, to_utc
 from chart_draw import draw_chart_artistic
-from config import Fondo
+from config import Background
 
 
 BODIES = [
@@ -17,56 +17,50 @@ BODIES = [
     (swe.PLUTO, "Pluto"),
 ]
 
-def generar_carta_final(
-    nombre: str,
-    ciudad: str,
+def generate_final_chart(
+    name: str,
+    city: str,
     year: int,
     month: int,
     day: int,
     hour: int,
     minute: int,
-    config_fondo: Fondo
+    background_config: Background
 ) -> bool:
     """
-    Calcula las posiciones astronómicas y genera la imagen de la carta natal.
-    Maneja la conversión UTC considerando cambios de fecha.
+    Calculates astronomical positions and generates the natal chart image.
+    Handles UTC conversion including date changes.
     """
     try:
-        lat, lon, tz = obtener_datos_ciudad(ciudad)
+        lat, lon, tz = get_city_data(city)
 
-        # Obtenemos la fecha y hora exacta en UTC (maneja saltos de día)
-        y_u, m_u, d_u, h_u = hora_utc(year, month, day, hour, minute, tz)
+        year_utc, month_utc, day_utc, hour_utc = to_utc(year, month, day, hour, minute, tz)
 
-        # Nota: julday acepta el año, mes, día y hora decimal en UTC
-        jd = swe.julday(y_u, m_u, d_u, h_u)
+        jd = swe.julday(year_utc, month_utc, day_utc, hour_utc)
 
         planets = {}
-        for body_id, name in BODIES:
-            # swe.calc devuelve (posiciones, flags) -> data[0] es la longitud eclíptica
+        for body_id, body_name in BODIES:
             data, _ = swe.calc(jd, body_id)
-            planets[name] = data[0]
+            planets[body_name] = data[0]
 
         house_cusps, ascmc = swe.houses(jd, lat, lon, b'P')
         asc = ascmc[0]
 
         draw_chart_artistic(
-            name=nombre,
+            name=name,
             date_str=f"{day:02d} . {month:02d} . {year}",
             asc_deg=asc,
             house_cusps=house_cusps,
             planets=planets,
-            config_fondo=config_fondo
+            background_config=background_config
         )
 
-        print(f"✨ Carta generada exitosamente para {nombre} ({ciudad})")
+        print(f"✨ Chart generated successfully for {name} ({city})")
         return True
 
     except Exception as e:
-        print(f"Error en generar_carta_final: {e}")
+        print(f"Error in generate_final_chart: {e}")
         raise e
 
-# --- BLOQUE DE PRUEBA (Opcional) ---
 if __name__ == "__main__":
-    # Esto solo se ejecuta si corres este archivo directamente,
-    # no afectará cuando lo llames desde app.py
-    generar_carta_final("Leo", "Buenos Aires, Argentina", 1994, 9, 19, 17, 30)
+    generate_final_chart("Leo", "Buenos Aires, Argentina", 1994, 9, 19, 17, 30)

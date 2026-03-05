@@ -1,20 +1,18 @@
 import streamlit as st
 import pycountry
-from carta_natal import generar_carta_final
+from carta_natal import generate_final_chart
 from datetime import datetime
 import os
 import time
 from typing import List
-from config import Fondo, FONDOS
+from config import Background, BACKGROUNDS
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
 
 
-def selector_fondos_galeria() -> Fondo:
+def background_gallery_selector() -> Background:
     st.sidebar.header("🎨 Elige tu Estilo")
 
-   # --- INYECCIÓN DE CSS PARA EL ESTILO ---
-    # Esto hará que el botón seleccionado se vea oscuro/destacado
     st.markdown("""
         <style>
         div.stButton > button:first-child {
@@ -28,36 +26,33 @@ def selector_fondos_galeria() -> Fondo:
                     border-radius: 20px;
                     transition: all 0.3s ease;
                 }
-        /* Estilo para el botón seleccionado (usando un selector de texto si es posible o simplemente el estado) */
         </style>
     """, unsafe_allow_html=True)
-    # Inicializar el estado usando el 'id' del primer fondo
-    if 'fondo_id_seleccionado' not in st.session_state:
-        st.session_state.fondo_id_seleccionado = FONDOS[0]["id"]
+
+    if 'selected_background_id' not in st.session_state:
+        st.session_state.selected_background_id = BACKGROUNDS[0]["id"]
 
     cols = st.sidebar.columns(2)
 
-    for i, fondo in enumerate(FONDOS):
+    for i, background in enumerate(BACKGROUNDS):
         with cols[i % 2]:
-            if os.path.exists(fondo["path"]):
-                st.image(fondo["path"], use_container_width=True)
+            if os.path.exists(background["path"]):
+                st.image(background["path"], use_container_width=True)
 
-                es_activo = st.session_state.fondo_id_seleccionado == fondo["id"]
-                # Usamos tipo primary para el botón seleccionado
-                tipo = "primary" if es_activo else "secondary"
-                label = f"◉ {fondo['name']}" if es_activo else f"○ {fondo['name']}"
+                is_active = st.session_state.selected_background_id == background["id"]
+                btn_type = "primary" if is_active else "secondary"
+                label = f"◉ {background['name']}" if is_active else f"○ {background['name']}"
 
-                if st.button(label, key=f"btn_{fondo['id']}", use_container_width=True, type=tipo):
-                    st.session_state.fondo_id_seleccionado = fondo["id"]
+                if st.button(label, key=f"btn_{background['id']}", use_container_width=True, type=btn_type):
+                    st.session_state.selected_background_id = background["id"]
                     st.rerun()
             else:
-                st.error(f"Falta: {fondo['name']}")
+                st.error(f"Falta: {background['name']}")
 
     st.sidebar.markdown("---")
 
-    # Buscamos el objeto completo que coincida con el ID seleccionado
-    seleccionado = next(f for f in FONDOS if f["id"] == st.session_state.fondo_id_seleccionado)
-    return seleccionado
+    selected = next(b for b in BACKGROUNDS if b["id"] == st.session_state.selected_background_id)
+    return selected
 
 import streamlit as st
 
@@ -103,70 +98,61 @@ else:
 # --- INTERFAZ ---
 st.title("🌙 Generador de Carta Natal")
 
-paises = sorted([p.name for p in pycountry.countries])
+countries = sorted([p.name for p in pycountry.countries])
 
 with st.sidebar:
     st.header("Datos de Nacimiento")
-    nombre = st.text_input("Nombre", "Leo")
-    pais = st.selectbox("País", paises, index=paises.index("Argentina"))
-    ciudad_txt = st.text_input("Ciudad", "Buenos Aires")
+    name = st.text_input("Nombre", "Leo")
+    country = st.selectbox("País", countries, index=countries.index("Argentina"))
+    city_input = st.text_input("Ciudad", "Buenos Aires")
 
-    fecha_minima = datetime(1930, 1, 1)
-    fecha_maxima = datetime.now()
+    min_date = datetime(1930, 1, 1)
+    max_date = datetime.now()
 
     with st.sidebar:
-        # ... otros inputs ...
-
-        fecha = st.date_input(
+        date = st.date_input(
             "Fecha de Nacimiento",
-            value=datetime(1994, 9, 19), # Fecha por defecto
-            min_value=fecha_minima,
-            max_value=fecha_maxima
+            value=datetime(1994, 9, 19),
+            min_value=min_date,
+            max_value=max_date
         )
-        # Inputs numéricos para Hora y Minutos
         st.write("Hora de Nacimiento (formato 24hs)")
         col_hr, col_min = st.columns(2)
 
         with col_hr:
-            hora_v = st.number_input("Hora", min_value=0, max_value=23, value=17, step=1)
+            hour = st.number_input("Hora", min_value=0, max_value=23, value=17, step=1)
 
         with col_min:
-            minuto_v = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
+            minute = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
 
-    st.markdown("---") # Separador visual
-    config_fondo = selector_fondos_galeria()
+    st.markdown("---")
+    background_config = background_gallery_selector()
 
-    btn_generar = st.button("Generar Carta", use_container_width=True, type="primary")
+    btn_generate = st.button("Generar Carta", use_container_width=True, type="primary")
 
-# --- EJECUCIÓN ---
-if btn_generar:
-    # Combinamos ciudad y país para tu función location
-    lugar_completo = f"{ciudad_txt}, {pais}"
+# --- EXECUTION ---
+if btn_generate:
+    full_location = f"{city_input}, {country}"
 
     try:
-        # Mostramos un mensaje de carga mientras se genera
         with st.spinner("Calculando posiciones planetarias y dibujando..."):
-            # Llamamos a tu lógica
-            exito = generar_carta_final(
-                nombre,
-                lugar_completo,
-                fecha.year, fecha.month, fecha.day,
-                hora_v, minuto_v,
-                config_fondo
+            success = generate_final_chart(
+                name,
+                full_location,
+                date.year, date.month, date.day,
+                hour, minute,
+                background_config
             )
 
-        if exito:
-            # Mostramos la imagen que generó draw_chart_artistic
-            # Nota: Asegúrate de que draw_chart_artistic guarde siempre con el mismo nombre
+        if success:
             if os.path.exists("carta_natal.png"):
-                st.image("carta_natal.png", caption=f"Carta Natal de {nombre}", width='stretch')
+                st.image("carta_natal.png", caption=f"Carta Natal de {name}", width='stretch')
 
-                # Botón de descarga
                 with open("carta_natal.png", "rb") as file:
                     st.download_button(
                         label="⬇️ Descargar Imagen",
                         data=file,
-                        file_name=f"carta_{nombre}.png",
+                        file_name=f"carta_{name}.png",
                         mime="image/png"
                     )
             else:

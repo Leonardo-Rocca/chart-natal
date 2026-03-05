@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from matplotlib import font_manager as fm
-from config import FONT_STYLES, FontID, Fondo
+from config import FONT_STYLES, FontID, Background
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
@@ -65,19 +65,18 @@ ASPECT_ANGLES_DEG = {
 ASPECT_ORB_GENERAL_DEG    = 5   # orbe para todos los aspectos en general
 ASPECT_ORB_LUMINARIES_DEG = 10  # orbe especial cuando intervienen Sol o Luna
 
-def signo_zodiacal(grados):
-    index = int(grados // 30)  # división entera
+def zodiac_sign(degrees):
+    index = int(degrees // 30)
     return ZODIAC_SIGNS[index]
 
 def get_sign_name(degrees):
-    nombres_signos = [
+    sign_names = [
         "Aries", "Tauro", "Géminis", "Cáncer",
         "Leo", "Virgo", "Libra", "Escorpio",
         "Sagitario", "Capricornio", "Acuario", "Piscis"
     ]
-    # Dividimos los 360° en 12 partes de 30° cada una
-    indice = int((degrees % 360) / 30)
-    return nombres_signos[indice]
+    index = int((degrees % 360) / 30)
+    return sign_names[index]
 
 def mid_angle(a1, a2):
     """Punto medio angular correcto (maneja wrap 360°)"""
@@ -99,13 +98,13 @@ def draw_chart_artistic(
     asc_deg: float,
     house_cusps: list,
     planets: dict,
-    config_fondo: Fondo,
+    background_config: Background,
     out_path: str = "carta_natal.png"
 ):
-    color = config_fondo["color"]
-    bg_path = config_fondo["path"]
-    name_font = config_fondo["name_font"]
-    subname_font = config_fondo["subname_font"]
+    color = background_config["color"]
+    bg_path = background_config["path"]
+    name_font = background_config["name_font"]
+    subname_font = background_config["subname_font"]
     name_font_path = name_font.value
     subname_font_path = subname_font.value
 
@@ -284,9 +283,9 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
     }
 
     special_points = [
-        ("Sol", signo_zodiacal(planets["Sun"]), get_sign_name(planets["Sun"])),
-        ("Luna", signo_zodiacal(planets["Moon"]), get_sign_name(planets["Moon"])),
-        ("Asc", signo_zodiacal(asc_deg), get_sign_name(asc_deg))
+        ("Sol", zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
+        ("Luna", zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
+        ("Asc", zodiac_sign(asc_deg), get_sign_name(asc_deg))
     ]
 
     fontsize = size_sym
