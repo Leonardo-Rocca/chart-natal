@@ -275,53 +275,42 @@ def draw_chart_artistic(
 
 
 def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_font_path, size_sym, spacing=0.28, y_pos=1.25):
-    # Diccionario para textos decorativos
-    display_names = {
-        "Sol": "Signo\nSolar",
-        "Luna": "Signo\nLunar",
-        "Asc": "Signo\nAsc."
-    }
-
     special_points = [
         ("Sol", zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
         ("Luna", zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
-        ("Asc", zodiac_sign(asc_deg), get_sign_name(asc_deg))
+        ("Asc.", zodiac_sign(asc_deg), get_sign_name(asc_deg))
     ]
 
-    fontsize = size_sym
-    # Definimos un margen izquierdo fijo para que no floten en el centro
-    margin_left = 0.12
+    x_positions = [2/6, 3/6, 4/6]
 
-    for i, (key, symbol, sign_name) in enumerate(special_points):
-        # Posición base de cada grupo alineada desde la izquierda
-        x_group = margin_left + (i * spacing)
+    for i, (label, symbol, sign_name) in enumerate(special_points):
+        x = x_positions[i]
 
-        # 1. DIBUJAR EL SÍMBOLO (Ahora a la derecha del texto)
+        # 1. Símbolo zodiacal (arriba)
         ax.text(
-            x_group + 0.09, y_pos + 0.06, # Ajuste de posición relativa al texto
+            x, y_pos + 0.15,
             symbol,
-            ha="left", va="center",
-            color=color, fontsize=fontsize * 1.4,
+            ha="center", va="center",
+            color=color, fontsize=size_sym * 1.4,
             transform=ax.transAxes
         )
 
-        # 2. DIBUJAR "Signo Solar/Lunar/etc" (Alineado a la izquierda)
+        # 2. Nombre del signo (medio)
         ax.text(
-            x_group, y_pos,
-            display_names[key],
-            ha="left", va="bottom", # Alineación horizontal a la izquierda
-            color=color,
-            linespacing=0.8,
-            fontproperties=fm.FontProperties(fname=name_font_path, size=fontsize * 0.55),
-            transform=ax.transAxes
-        )
-
-        # 3. DIBUJAR EL NOMBRE DEL SIGNO (Debajo, alineado a la izquierda)
-        ax.text(
-            x_group, y_pos - 0.02, # Justo debajo del texto principal
+            x, y_pos - 0.20,
             sign_name,
-            ha="left", va="top", # Alineación horizontal a la izquierda
+            ha="center", va="center",
             color=color,
-            fontproperties=fm.FontProperties(fname=subname_font_path, size=fontsize * 0.3),
+            fontproperties=fm.FontProperties(fname=name_font_path, size=size_sym * 0.55),
+            transform=ax.transAxes
+        )
+
+        # 3. "Sol" / "Luna" / "Ascendente" (abajo)
+        ax.text(
+            x, y_pos - 0.40,
+            label,
+            ha="center", va="center",
+            color=color,
+            fontproperties=fm.FontProperties(fname=subname_font_path, size=size_sym * 0.4),
             transform=ax.transAxes
         )

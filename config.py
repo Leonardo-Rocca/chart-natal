@@ -69,7 +69,7 @@ BACKGROUNDS: List[Background] = [
     {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white",
         "name_font": FontID.FUTURA, "subname_font": FontID.NIXIE_ONE},
     {"id": "gold", "name": "Gold", "path": "backgrounds/gold.jpg", "color": "#d4b68e",
-        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.NOW_REGULAR},
+        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.MOON_TIME_REGULAR},
     {"id": "beige", "name": "Beige", "path": "backgrounds/beige.jpg", "color": "#805010",
         "name_font": FontID.SEASONS, "subname_font": FontID.NOW_REGULAR},
 ]
