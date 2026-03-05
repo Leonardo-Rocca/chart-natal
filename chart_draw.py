@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from matplotlib import font_manager as fm
-from config import FONT_STYLES, FontID, Background
+from config import Background
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
@@ -103,18 +103,10 @@ def draw_chart_artistic(
 ):
     color = background_config["color"]
     bg_path = background_config["path"]
-    name_font = background_config["name_font"]
-    subname_font = background_config["subname_font"]
-    name_font_path = name_font.value
-    subname_font_path = subname_font.value
-
-    # .get() with fallback NOW_REGULAR
-    style = FONT_STYLES.get(name_font, FONT_STYLES[FontID.NOW_REGULAR])
-    size_title = style["title"]
-    size_sym = style["symbol"]
-
-    sub_style = FONT_STYLES.get(subname_font, FONT_STYLES[FontID.NOW_REGULAR])
-    size_sub = sub_style["subtitle"]
+    title_font_path = background_config["title"]["font"].value
+    title_size = background_config["title"]["size"]
+    subtitle_font_path = background_config["subtitle"]["font"].value
+    subtitle_size = background_config["subtitle"]["size"]
 
     fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
     ax = plt.subplot(111, polar=True)
@@ -241,20 +233,18 @@ def draw_chart_artistic(
     # Nombre con fuente personalizada
     # ===================================
 
-    name_font = fm.FontProperties(fname=name_font_path, size=size_title)
-
     fig.text(
         0.5, 0.84,
         name,
         ha="center",
-        fontproperties=name_font,
+        fontproperties=fm.FontProperties(fname=title_font_path, size=title_size),
         color=color
     )
     fig.text(
         0.5, 0.81,
         date_str,
         ha="center",
-        fontproperties=fm.FontProperties(fname=subname_font_path, size=size_sub),
+        fontproperties=fm.FontProperties(fname=subtitle_font_path, size=subtitle_size),
         color=color
     )
 
@@ -264,9 +254,7 @@ def draw_chart_artistic(
         asc_deg=asc_deg,
         planets=planets,
         color=color,
-        name_font_path=name_font_path,
-        subname_font_path=subname_font_path,
-        size_sym=size_sym,
+        background_config=background_config,
     )
 
 
@@ -274,12 +262,22 @@ def draw_chart_artistic(
     plt.close()
 
 
-def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_font_path, size_sym, spacing=0.28, y_pos=1.25):
+def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25):
     special_points = [
         ("Sol", zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
         ("Luna", zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
         ("Asc.", zodiac_sign(asc_deg), get_sign_name(asc_deg))
     ]
+
+    symbol_size = background_config["symbol_size"]
+    sign_name_fp = fm.FontProperties(
+        fname=background_config["sign_name"]["font"].value,
+        size=background_config["sign_name"]["size"]
+    )
+    point_label_fp = fm.FontProperties(
+        fname=background_config["point_label"]["font"].value,
+        size=background_config["point_label"]["size"]
+    )
 
     x_positions = [2/6, 3/6, 4/6]
 
@@ -291,7 +289,7 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
             x, y_pos + 0.15,
             symbol,
             ha="center", va="center",
-            color=color, fontsize=size_sym * 1.4,
+            color=color, fontsize=symbol_size,
             transform=ax.transAxes
         )
 
@@ -301,16 +299,16 @@ def draw_special_points(ax, asc_deg, planets, color, name_font_path, subname_fon
             sign_name,
             ha="center", va="center",
             color=color,
-            fontproperties=fm.FontProperties(fname=name_font_path, size=size_sym * 0.55),
+            fontproperties=sign_name_fp,
             transform=ax.transAxes
         )
 
-        # 3. "Sol" / "Luna" / "Ascendente" (abajo)
+        # 3. "Sol" / "Luna" / "Asc." (abajo)
         ax.text(
-            x, y_pos - 0.40,
+            x, y_pos - 0.45,
             label,
             ha="center", va="center",
             color=color,
-            fontproperties=fm.FontProperties(fname=subname_font_path, size=size_sym * 0.4),
+            fontproperties=point_label_fp,
             transform=ax.transAxes
         )

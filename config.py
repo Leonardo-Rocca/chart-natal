@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import TypedDict, Dict, List
+from typing import TypedDict, List
 
-# 1. Definimos el "Símbolo" (Enum)
+
 class FontID(Enum):
     MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
     NOW_REGULAR = "fonts/Now-Regular.otf"
@@ -10,66 +10,95 @@ class FontID(Enum):
     SEASONS = "fonts/The Seasons Regular.ttf"
     WEDGES = "fonts/Wedges.ttf"
 
-# 2. Definimos el Mapa de Estilos (Tamaños fijos por fuente)
-# Estructura: (tamaño_nombre, tamaño_subnombre, tamaño_simbolo)
-FONT_STYLES: Dict[FontID, Dict[str, int]] = {
-    FontID.MOON_TIME_REGULAR: {
-        "title": 78,
-        "subtitle": 1,
-        "symbol": 50
-    },
-    FontID.NOW_REGULAR: {
-        "title": 76,
-        "subtitle": 15,
-        "symbol": 45
-    },
-    FontID.FUTURA: {
-        "title": 76,
-        "subtitle": 1,
-        "symbol": 45
-    },
-    FontID.NIXIE_ONE: {
-        "title": 76,
-        "subtitle": 15,
-        "symbol": 45
-    },
-    FontID.SEASONS: {
-        "title": 76,
-        "subtitle": 1,
-        "symbol": 35
-    },
-    FontID.WEDGES: {
-        "title": 76,
-        "subtitle": 1,
-        "symbol": 45
-    }
-}
+
+class FontConfig(TypedDict):
+    font: FontID
+    size: int
+
 
 class Background(TypedDict):
     id: str
     name: str
     path: str
     color: str
-    name_font: FontID
-    subname_font: FontID
-
+    title: FontConfig       # name at top of chart
+    subtitle: FontConfig    # date at top of chart
+    symbol_size: int        # zodiac glyph size (unicode, no font file)
+    sign_name: FontConfig   # e.g. "Aries", "Tauro" in special_points
+    point_label: FontConfig # "Sol", "Luna", "Ascendente" in special_points
 
 
 BACKGROUNDS: List[Background] = [
-    {"id": "noche_estrellada", "name": "Noche del Lobo", "path": "backgrounds/background.jpg", "color": "white",
-        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.NOW_REGULAR},
-    {"id": "nebulosa", "name": "Nebulosa", "path": "backgrounds/background2.jpg", "color": "white",
-        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.NOW_REGULAR},
-    {"id": "minimal_rosa", "name": "Minimalista rosa", "path": "backgrounds/minimalista-rosa.jpg", "color": "#fb868c",
-        "name_font": FontID.FUTURA, "subname_font": FontID.NOW_REGULAR},
-    {"id": "negro", "name": "Negro", "path": "backgrounds/black.jpg", "color": "white",
-        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.NOW_REGULAR},
-    {"id": "verde", "name": "Verde", "path": "backgrounds/green.jpg", "color": "white",
-        "name_font": FontID.FUTURA, "subname_font": FontID.NOW_REGULAR},
-    {"id": "azul_estrella", "name": "Azul estrella", "path": "backgrounds/blue-stars.jpg", "color": "white",
-        "name_font": FontID.FUTURA, "subname_font": FontID.NIXIE_ONE},
-    {"id": "gold", "name": "Gold", "path": "backgrounds/gold.jpg", "color": "#d4b68e",
-        "name_font": FontID.MOON_TIME_REGULAR, "subname_font": FontID.MOON_TIME_REGULAR},
-    {"id": "beige", "name": "Beige", "path": "backgrounds/beige.jpg", "color": "#805010",
-        "name_font": FontID.SEASONS, "subname_font": FontID.NOW_REGULAR},
+    {
+        "id": "noche_estrellada", "name": "Noche del Lobo",
+        "path": "backgrounds/background.jpg", "color": "white",
+        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "nebulosa", "name": "Nebulosa",
+        "path": "backgrounds/background2.jpg", "color": "white",
+        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "minimal_rosa", "name": "Minimalista rosa",
+        "path": "backgrounds/minimalista-rosa.jpg", "color": "#fb868c",
+        "title":       {"font": FontID.FUTURA,    "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.FUTURA,      "size": 18},
+    },
+    {
+        "id": "negro", "name": "Negro",
+        "path": "backgrounds/black.jpg", "color": "white",
+        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "verde", "name": "Verde",
+        "path": "backgrounds/green.jpg", "color": "white",
+        "title":       {"font": FontID.FUTURA,    "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.FUTURA,      "size": 18},
+    },
+    {
+        "id": "azul_estrella", "name": "Azul estrella",
+        "path": "backgrounds/blue-stars.jpg", "color": "white",
+        "title":       {"font": FontID.FUTURA,    "size": 76},
+        "subtitle":    {"font": FontID.NIXIE_ONE,  "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NIXIE_ONE,  "size": 25},
+        "point_label": {"font": FontID.FUTURA,     "size": 18},
+    },
+    {
+        "id": "gold", "name": "Gold",
+        "path": "backgrounds/gold.jpg", "color": "#d4b68e",
+        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "subtitle":    {"font": FontID.NIXIE_ONE,  "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.MOON_TIME_REGULAR,  "size": 28},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "beige", "name": "Beige",
+        "path": "backgrounds/beige.jpg", "color": "#805010",
+        "title":       {"font": FontID.SEASONS,   "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 49,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
+        "point_label": {"font": FontID.SEASONS,     "size": 14},
+    },
 ]
