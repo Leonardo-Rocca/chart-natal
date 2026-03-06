@@ -101,4 +101,22 @@ BACKGROUNDS: List[Background] = [
         "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
         "point_label": {"font": FontID.SEASONS,     "size": 14},
     },
+    {
+        "id": "aesthetic_retro_místico", "name": "Retro Místico",
+        "path": "backgrounds/aesthetic_retro_místico.png", "color": "white",
+        "title":       {"font": FontID.SEASONS,   "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 49,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
+        "point_label": {"font": FontID.FUTURA,     "size": 18},
+    },
+    {
+        "id": "nursery_dreams", "name": "Nursery dreams",
+        "path": "backgrounds/nursery_dreams.png", "color": "#5D574F",
+        "title":       {"font": FontID.SEASONS,   "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 49,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
+        "point_label": {"font": FontID.NIXIE_ONE,     "size": 18},
+    },
 ]
