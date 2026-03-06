@@ -25,7 +25,8 @@ def generate_final_chart(
     day: int,
     hour: int,
     minute: int,
-    background_config: Background
+    background_config: Background,
+    language: str = "Español"
 ) -> bool:
     """
     Calculates astronomical positions and generates the natal chart image.
@@ -52,7 +53,8 @@ def generate_final_chart(
             asc_deg=asc,
             house_cusps=house_cusps,
             planets=planets,
-            background_config=background_config
+            background_config=background_config,
+            language=language
         )
 
         print(f"✨ Chart generated successfully for {name} ({city})")

@@ -126,6 +126,8 @@ with st.sidebar:
             minute = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
 
     st.markdown("---")
+    language = st.radio("Idioma", ["Español", "English"], horizontal=True)
+    st.markdown("---")
     background_config = background_gallery_selector()
 
     btn_generate = st.button("Generar Carta", use_container_width=True, type="primary")
@@ -141,7 +143,8 @@ if btn_generate:
                 full_location,
                 date.year, date.month, date.day,
                 hour, minute,
-                background_config
+                background_config,
+                language=language
             )
 
         if success:

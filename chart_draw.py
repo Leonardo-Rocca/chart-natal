@@ -6,6 +6,11 @@ from config import Background
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
+SPECIAL_POINT_LABELS = {
+    "Español": ["Sol", "Luna", "Asc."],
+    "English": ["Sun", "Moon", "Asc."],
+}
+
 ZODIAC_SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]
 PLANET_SYMBOLS = {
     "Sun": "☉",
@@ -99,7 +104,8 @@ def draw_chart_artistic(
     house_cusps: list,
     planets: dict,
     background_config: Background,
-    out_path: str = "carta_natal.png"
+    out_path: str = "carta_natal.png",
+    language: str = "Español"
 ):
     color = background_config["color"]
     bg_path = background_config["path"]
@@ -255,6 +261,7 @@ def draw_chart_artistic(
         planets=planets,
         color=color,
         background_config=background_config,
+        language=language,
     )
 
 
@@ -262,11 +269,12 @@ def draw_chart_artistic(
     plt.close()
 
 
-def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25):
+def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language="Español"):
+    labels = SPECIAL_POINT_LABELS.get(language, SPECIAL_POINT_LABELS[language])
     special_points = [
-        ("Sol", zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
-        ("Luna", zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
-        ("Asc.", zodiac_sign(asc_deg), get_sign_name(asc_deg))
+        (labels[0], zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
+        (labels[1], zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
+        (labels[2], zodiac_sign(asc_deg), get_sign_name(asc_deg))
     ]
 
     symbol_size = background_config["symbol_size"]
