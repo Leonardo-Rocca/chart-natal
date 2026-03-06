@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, List
+from typing import TypedDict
 
 
 class FontID(Enum):
@@ -28,7 +28,7 @@ class Background(TypedDict):
     point_label: FontConfig # "Sol", "Luna", "Ascendente" in special_points
 
 
-BACKGROUNDS: List[Background] = [
+BACKGROUNDS: list[Background] = [
     {
         "id": "noche_estrellada", "name": "Noche Lobo",
         "path": "backgrounds/background.jpg", "color": "white",

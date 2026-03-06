@@ -4,7 +4,6 @@ from carta_natal import generate_final_chart
 from datetime import datetime
 import os
 import time
-from typing import List
 from config import Background, BACKGROUNDS
 
 st.set_page_config(page_title="Astrología Artística", page_icon="✨")
