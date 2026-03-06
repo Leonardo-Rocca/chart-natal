@@ -30,7 +30,7 @@ class Background(TypedDict):
 
 BACKGROUNDS: List[Background] = [
     {
-        "id": "noche_estrellada", "name": "Noche del Lobo",
+        "id": "noche_estrellada", "name": "Noche Lobo",
         "path": "backgrounds/background.jpg", "color": "white",
         "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
         "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
@@ -48,9 +48,9 @@ BACKGROUNDS: List[Background] = [
         "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
     },
     {
-        "id": "minimal_rosa", "name": "Minimalista rosa",
+        "id": "minimal_rosa", "name": "Min Rosa",
         "path": "backgrounds/minimalista-rosa.jpg", "color": "#fb868c",
-        "title":       {"font": FontID.FUTURA,    "size": 76},
+        "title":       {"font": FontID.WEDGES,    "size": 76},
         "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
         "symbol_size": 63,
         "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},

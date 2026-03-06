@@ -32,18 +32,18 @@ def background_gallery_selector() -> Background:
     if 'selected_background_id' not in st.session_state:
         st.session_state.selected_background_id = BACKGROUNDS[0]["id"]
 
-    cols = st.sidebar.columns(2)
+    cols = st.sidebar.columns(4)
 
     for i, background in enumerate(BACKGROUNDS):
-        with cols[i % 2]:
+        with cols[i % 4]:
             if os.path.exists(background["path"]):
-                st.image(background["path"], use_container_width=True)
+                st.image(background["path"], width='stretch')
 
                 is_active = st.session_state.selected_background_id == background["id"]
                 btn_type = "primary" if is_active else "secondary"
                 label = f"◉ {background['name']}" if is_active else f"○ {background['name']}"
 
-                if st.button(label, key=f"btn_{background['id']}", use_container_width=True, type=btn_type):
+                if st.button(label, key=f"btn_{background['id']}", width='stretch', type=btn_type):
                     st.session_state.selected_background_id = background["id"]
                     st.rerun()
             else:
@@ -125,12 +125,11 @@ with st.sidebar:
         with col_min:
             minute = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
 
-    st.markdown("---")
     language = st.radio("Idioma", ["Español", "English"], horizontal=True)
     st.markdown("---")
     background_config = background_gallery_selector()
 
-    btn_generate = st.button("Generar Carta", use_container_width=True, type="primary")
+    btn_generate = st.button("Generar Carta", width='stretch', type="primary")
 
 # --- EXECUTION ---
 if btn_generate:
