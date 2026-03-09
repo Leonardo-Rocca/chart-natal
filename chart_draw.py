@@ -77,7 +77,7 @@ def zodiac_sign(degrees):
     return ZODIAC_SIGNS[index]
 
 SIGN_NAMES = {
-    "Español": ["Aries", "Tauro", "Géminis", "Cáncer", "Leo", "Virgo",
+    "Español": ["Aries", "Tauro", "Geminis", "Cancer", "Leo", "Virgo",
                 "Libra", "Escorpio", "Sagitario", "Capricornio", "Acuario", "Piscis"],
     "English": ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
                 "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"],
