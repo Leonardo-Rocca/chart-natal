@@ -102,7 +102,7 @@ BACKGROUNDS: list[Background] = [
         "point_label": {"font": FontID.SEASONS,     "size": 14},
     },
     {
-        "id": "aesthetic_retro_místico", "name": "Retro Místico",
+        "id": "aesthetic_retro_mistico", "name": "Retro Místico",
         "path": "backgrounds/aesthetic_retro_místico.png", "color": "white",
         "title":       {"font": FontID.SEASONS,   "size": 76},
         "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},

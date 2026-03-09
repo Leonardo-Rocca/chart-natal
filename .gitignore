@@ -1,5 +1,6 @@
 venv/
 .DS_Store
-*.png
+carta_natal.png
 __pycache__/
 .idea
+olds
