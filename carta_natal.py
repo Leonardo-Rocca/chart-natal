@@ -1,6 +1,6 @@
 import swisseph as swe
 from location import get_city_data, to_utc
-from chart_draw import draw_chart_artistic
+from chart_draw import draw_chart_artistic, DEFAULT_LANGUAGE
 from config import Background
 
 
@@ -26,7 +26,7 @@ def generate_final_chart(
     hour: int,
     minute: int,
     background_config: Background,
-    language: str = "Español"
+    language: str = DEFAULT_LANGUAGE
 ) -> bool:
     """
     Calculates astronomical positions and generates the natal chart image.

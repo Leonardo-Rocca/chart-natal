@@ -6,6 +6,8 @@ from config import Background
 
 SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
+DEFAULT_LANGUAGE = "Español"
+
 SPECIAL_POINT_LABELS = {
     "Español": ["Sol", "Luna", "Asc."],
     "English": ["Sun", "Moon", "Asc."],
@@ -74,14 +76,17 @@ def zodiac_sign(degrees):
     index = int(degrees // 30)
     return ZODIAC_SIGNS[index]
 
-def get_sign_name(degrees):
-    sign_names = [
-        "Aries", "Tauro", "Géminis", "Cáncer",
-        "Leo", "Virgo", "Libra", "Escorpio",
-        "Sagitario", "Capricornio", "Acuario", "Piscis"
-    ]
+SIGN_NAMES = {
+    "Español": ["Aries", "Tauro", "Géminis", "Cáncer", "Leo", "Virgo",
+                "Libra", "Escorpio", "Sagitario", "Capricornio", "Acuario", "Piscis"],
+    "English": ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"],
+}
+
+def get_sign_name(degrees, language: str = DEFAULT_LANGUAGE) -> str:
+    names = SIGN_NAMES.get(language, SIGN_NAMES[DEFAULT_LANGUAGE])
     index = int((degrees % 360) / 30)
-    return sign_names[index]
+    return names[index]
 
 def mid_angle(a1, a2):
     """Punto medio angular correcto (maneja wrap 360°)"""
@@ -105,7 +110,7 @@ def draw_chart_artistic(
     planets: dict,
     background_config: Background,
     out_path: str = "carta_natal.png",
-    language: str = "Español"
+    language: str = DEFAULT_LANGUAGE
 ):
     color = background_config["color"]
     bg_path = background_config["path"]
@@ -269,12 +274,12 @@ def draw_chart_artistic(
     plt.close()
 
 
-def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language="Español"):
+def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language=DEFAULT_LANGUAGE):
     labels = SPECIAL_POINT_LABELS.get(language, SPECIAL_POINT_LABELS[language])
     special_points = [
-        (labels[0], zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"])),
-        (labels[1], zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"])),
-        (labels[2], zodiac_sign(asc_deg), get_sign_name(asc_deg))
+        (labels[0], zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"], language)),
+        (labels[1], zodiac_sign(planets["Moon"]), get_sign_name(planets["Moon"], language)),
+        (labels[2], zodiac_sign(asc_deg), get_sign_name(asc_deg, language))
     ]
 
     symbol_size = background_config["symbol_size"]
@@ -287,7 +292,7 @@ def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.
         size=background_config["point_label"]["size"]
     )
 
-    x_positions = [2/6, 3/6, 4/6]
+    x_positions = [3/12, 6/12, 9/12]
 
     for i, (label, symbol, sign_name) in enumerate(special_points):
         x = x_positions[i]
