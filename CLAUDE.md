@@ -1,6 +1,7 @@
 ## Project Rules
 
 - Every response must end with: `git commit -m "brief_summary_in_english"`
+- Not use large (simplify) explanatory comments unless requested 
 
 ## Architecture
 

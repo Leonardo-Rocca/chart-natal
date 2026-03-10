@@ -1,6 +1,6 @@
 import swisseph as swe
 from location import get_city_data, to_utc
-from chart_draw import draw_chart_artistic, DEFAULT_LANGUAGE
+from chart_draw import draw_chart_artistic, DEFAULT_LANGUAGE, DEFAULT_PAPER_SIZE
 from config import Background
 
 
@@ -26,7 +26,8 @@ def generate_final_chart(
     hour: int,
     minute: int,
     background_config: Background,
-    language: str = DEFAULT_LANGUAGE
+    language: str = DEFAULT_LANGUAGE,
+    paper_size: str = DEFAULT_PAPER_SIZE,
 ) -> bool:
     """
     Calculates astronomical positions and generates the natal chart image.
@@ -54,7 +55,8 @@ def generate_final_chart(
             house_cusps=house_cusps,
             planets=planets,
             background_config=background_config,
-            language=language
+            language=language,
+            paper_size=paper_size,
         )
 
         print(f"✨ Chart generated successfully for {name} ({city})")

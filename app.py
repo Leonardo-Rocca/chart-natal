@@ -125,6 +125,7 @@ with st.sidebar:
             minute = st.number_input("Minutos", min_value=0, max_value=59, value=30, step=1)
 
     language = st.radio("Idioma", ["Español", "English"], horizontal=True)
+    paper_size = st.radio("Tamaño", ["A5", "A4", "A3"], index=1, horizontal=True)
     st.markdown("---")
     background_config = background_gallery_selector()
 
@@ -142,7 +143,8 @@ if btn_generate:
                 date.year, date.month, date.day,
                 hour, minute,
                 background_config,
-                language=language
+                language=language,
+                paper_size=paper_size,
             )
 
         if success:

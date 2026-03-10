@@ -8,6 +8,14 @@ SYMBOLS_NAME_FONT_PATH = "fonts/DancingScript-VariableFont_wght.ttf"
 
 DEFAULT_LANGUAGE = "Español"
 
+PAPER_SIZES: dict[str, tuple[float, float]] = {
+    "A5": (5.83, 8.27),
+    "A4": (8.27, 11.69),
+    "A3": (11.69, 16.54),
+}
+DEFAULT_PAPER_SIZE = "A4"
+_A4_WIDTH = 8.27
+
 SPECIAL_POINT_LABELS = {
     "Español": ["Sol", "Luna", "Asc."],
     "English": ["Sun", "Moon", "Asc."],
@@ -110,16 +118,20 @@ def draw_chart_artistic(
     planets: dict,
     background_config: Background,
     out_path: str = "carta_natal.png",
-    language: str = DEFAULT_LANGUAGE
+    language: str = DEFAULT_LANGUAGE,
+    paper_size: str = DEFAULT_PAPER_SIZE,
 ):
     color = background_config["color"]
     bg_path = background_config["path"]
     title_font_path = background_config["title"]["font"].value
-    title_size = background_config["title"]["size"]
     subtitle_font_path = background_config["subtitle"]["font"].value
-    subtitle_size = background_config["subtitle"]["size"]
 
-    fig = plt.figure(figsize=(8.27, 11.69))  # A4 vertical
+    w, h = PAPER_SIZES.get(paper_size, PAPER_SIZES[DEFAULT_PAPER_SIZE])
+    scale = w / _A4_WIDTH
+    title_size = round(background_config["title"]["size"] * scale)
+    subtitle_size = round(background_config["subtitle"]["size"] * scale)
+
+    fig = plt.figure(figsize=(w, h))
     ax = plt.subplot(111, polar=True)
     ax.set_position([0.11, 0.11, 0.78, 0.78])
     ax.set_ylim(0,1)
@@ -162,7 +174,7 @@ def draw_chart_artistic(
     for i, sign in enumerate(ZODIAC_SIGNS):
         angle = np.deg2rad(i * 30 + 15) - offset
         ax.text(angle, RADIUS_SIGN_LABELS, sign,
-                color=color, fontsize=20,
+                color=color, fontsize=round(20 * scale),
                 ha="center", va="center")
 
         # líneas divisorias de signos
@@ -180,7 +192,7 @@ def draw_chart_artistic(
             RADIUS_PLANET_SYMBOLS, # offset radial para símbolos de planetas
             symbol,
             color=color,
-            fontsize=17,
+            fontsize=round(17 * scale),
             ha="center",
             va="center"
         )
@@ -211,7 +223,7 @@ def draw_chart_artistic(
             r_house_numbers,
             str(i + 1),
             color=color,
-            fontsize=8,
+            fontsize=round(8 * scale),
             ha="center",
             va="center"
         )
@@ -267,6 +279,7 @@ def draw_chart_artistic(
         color=color,
         background_config=background_config,
         language=language,
+        scale=scale,
     )
 
 
@@ -274,7 +287,7 @@ def draw_chart_artistic(
     plt.close()
 
 
-def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language=DEFAULT_LANGUAGE):
+def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language=DEFAULT_LANGUAGE, scale=1.0):
     labels = SPECIAL_POINT_LABELS.get(language, SPECIAL_POINT_LABELS[language])
     special_points = [
         (labels[0], zodiac_sign(planets["Sun"]), get_sign_name(planets["Sun"], language)),
@@ -282,14 +295,14 @@ def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.
         (labels[2], zodiac_sign(asc_deg), get_sign_name(asc_deg, language))
     ]
 
-    symbol_size = background_config["symbol_size"]
+    symbol_size = round(background_config["symbol_size"] * scale)
     sign_name_fp = fm.FontProperties(
         fname=background_config["sign_name"]["font"].value,
-        size=background_config["sign_name"]["size"]
+        size=round(background_config["sign_name"]["size"] * scale)
     )
     point_label_fp = fm.FontProperties(
         fname=background_config["point_label"]["font"].value,
-        size=background_config["point_label"]["size"]
+        size=round(background_config["point_label"]["size"] * scale)
     )
 
     x_positions = [3/12, 6/12, 9/12]
