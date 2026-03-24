@@ -257,14 +257,14 @@ def draw_chart_artistic(
     # ===================================
 
     fig.text(
-        0.5, 0.84,
+        0.5, 0.85,
         name,
         ha="center",
         fontproperties=fm.FontProperties(fname=title_font_path, size=title_size),
         color=color
     )
     fig.text(
-        0.5, 0.81,
+        0.5, 0.80,
         date_str,
         ha="center",
         fontproperties=fm.FontProperties(fname=subtitle_font_path, size=subtitle_size),

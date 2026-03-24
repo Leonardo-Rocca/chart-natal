@@ -5,7 +5,7 @@ from typing import TypedDict
 class FontID(Enum):
     MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
     NOW_REGULAR = "fonts/Now-Regular.otf"
-    FUTURA = "fonts/FuturaCyrillicLight.ttf"
+    FUTURA = "fonts/Futura Light.otf"
     NIXIE_ONE = "fonts/NixieOne.ttf"
     SEASONS = "fonts/The Seasons Regular.ttf"
     WEDGES = "fonts/Wedges.ttf"
@@ -50,7 +50,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "azul_estrella", "name": "Azul estrella",
         "path": "backgrounds/blue-stars.jpg", "color": "white",
-        "title":       {"font": FontID.FUTURA,    "size": 72},
+        "title":       {"font": FontID.FUTURA,    "size": 70},
         "subtitle":    {"font": FontID.NOW_REGULAR,  "size": 15},
         "symbol_size": 63,
         "sign_name":   {"font": FontID.NOW_REGULAR,  "size": 21},
@@ -77,7 +77,34 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "verde", "name": "Verde",
         "path": "backgrounds/green.jpg", "color": "white",
-        "title":       {"font": FontID.FUTURA,    "size": 76},
+        "title":       {"font": FontID.FUTURA,    "size": 70},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.FUTURA,      "size": 18},
+    },
+    {
+        "id": "blue", "name": "Azul",
+        "path": "backgrounds/blue.png", "color": "white",
+        "title":       {"font": FontID.FUTURA,    "size": 70},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.FUTURA,      "size": 18},
+    },
+    {
+        "id": "purple", "name": "Purple",
+        "path": "backgrounds/purple.png", "color": "white",
+        "title":       {"font": FontID.FUTURA,    "size": 70},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.FUTURA,      "size": 18},
+    },
+    {
+        "id": "pink", "name": "Pink",
+        "path": "backgrounds/pink.png", "color": "black",
+        "title":       {"font": FontID.FUTURA,    "size": 70},
         "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
         "symbol_size": 63,
         "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
@@ -102,15 +129,6 @@ BACKGROUNDS: list[Background] = [
         "point_label": {"font": FontID.SEASONS,     "size": 19},
     },
     {
-        "id": "aesthetic_retro_mistico", "name": "Retro Místico",
-        "path": "backgrounds/aesthetic_retro_mistico.png", "color": "white",
-        "title":       {"font": FontID.SEASONS,   "size": 76},
-        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
-        "symbol_size": 49,
-        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
-        "point_label": {"font": FontID.FUTURA,     "size": 23},
-    },
-    {
         "id": "nursery_dreams", "name": "Nursery dreams",
         "path": "backgrounds/nursery_dreams.png", "color": "#5D574F",
         "title":       {"font": FontID.SEASONS,   "size": 76},
@@ -120,13 +138,31 @@ BACKGROUNDS: list[Background] = [
         "point_label": {"font": FontID.NOW_REGULAR,     "size": 21},
     },
     {
+        "id": "aesthetic_retro_mistico", "name": "Retro Místico",
+        "path": "backgrounds/aesthetic_retro_mistico.png", "color": "white",
+        "title":       {"font": FontID.SEASONS,   "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 49,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
+        "point_label": {"font": FontID.FUTURA,     "size": 23},
+    },
+    {
         "id": "dark_academia", "name": "Dark Academia",
         "path": "backgrounds/dark_academia.jpg", "color": "#D4AF37",
         "title":       {"font": FontID.SEASONS,   "size": 76},
         "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
         "symbol_size": 49,
-        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 21},
-        "point_label": {"font": FontID.NOW_REGULAR,     "size": 21},
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.SEASONS,     "size": 18},
+    },
+    {
+        "id": "pergamino", "name": "Pergamino",
+        "path": "backgrounds/pergamino.jpg", "color": "#4A4A4A",
+        "title":       {"font": FontID.SEASONS,    "size": 76},
+        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
+        "symbol_size": 63,
+        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
+        "point_label": {"font": FontID.SEASONS,      "size": 18},
     },
     {
         "id": "bosque", "name": "Bosque",
@@ -145,14 +181,5 @@ BACKGROUNDS: list[Background] = [
         "symbol_size": 63,
         "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
         "point_label": {"font": FontID.FUTURA,      "size": 18},
-    },
-    {
-        "id": "pergamino", "name": "Pergamino",
-        "path": "backgrounds/pergamino.jpg", "color": "#4A4A4A",
-        "title":       {"font": FontID.SEASONS,    "size": 76},
-        "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
-        "symbol_size": 63,
-        "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
-        "point_label": {"font": FontID.SEASONS,      "size": 18},
     },
 ]
