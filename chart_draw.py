@@ -261,7 +261,7 @@ def draw_chart_artistic(
         name,
         ha="center",
         fontproperties=fm.FontProperties(fname=title_font_path, size=title_size),
-        color=color
+        color=background_config["title"].get("color", color)
     )
     fig.text(
         0.5, 0.80,

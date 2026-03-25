@@ -1,8 +1,9 @@
 from enum import Enum
-from typing import TypedDict
+from typing import TypedDict, NotRequired
 
 
 class FontID(Enum):
+    BIRTHSTONE_BOUNCE = "fonts/BirthstoneBounce-Regular.ttf"
     MOON_TIME_REGULAR = "fonts/MoonTime-Regular-1.ttf"
     NOW_REGULAR = "fonts/Now-Regular.otf"
     FUTURA = "fonts/Futura Light.otf"
@@ -14,6 +15,7 @@ class FontID(Enum):
 class FontConfig(TypedDict):
     font: FontID
     size: int
+    color: NotRequired[str]
 
 
 class Background(TypedDict):
@@ -32,7 +34,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "noche_estrellada", "name": "Noche Lobo",
         "path": "backgrounds/background.jpg", "color": "white",
-        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
         "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
         "symbol_size": 60,
         "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
@@ -41,7 +43,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "nebulosa", "name": "Nebulosa",
         "path": "backgrounds/nebulosa.png", "color": "white",
-        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
         "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
         "symbol_size": 60,
         "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
@@ -68,7 +70,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "negro", "name": "Negro",
         "path": "backgrounds/black.jpg", "color": "white",
-        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
         "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
         "symbol_size": 60,
         "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
@@ -113,7 +115,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "gold", "name": "Gold",
         "path": "backgrounds/gold.jpg", "color": "#d4b68e",
-        "title":       {"font": FontID.MOON_TIME_REGULAR, "size": 78},
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
         "subtitle":    {"font": FontID.NIXIE_ONE,  "size": 15},
         "symbol_size": 60,
         "sign_name":   {"font": FontID.NOW_REGULAR,  "size": 20},
@@ -176,7 +178,7 @@ BACKGROUNDS: list[Background] = [
     {
         "id": "minimal_rosa", "name": "Min Rosa",
         "path": "backgrounds/minimalista-rosa.jpg", "color": "#fb868c",
-        "title":       {"font": FontID.WEDGES,    "size": 76},
+        "title":       {"font": FontID.WEDGES,    "size": 76, "color": "white"},
         "subtitle":    {"font": FontID.NOW_REGULAR, "size": 15},
         "symbol_size": 63,
         "sign_name":   {"font": FontID.NOW_REGULAR, "size": 25},
