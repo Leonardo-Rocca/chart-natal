@@ -122,6 +122,7 @@ def draw_chart_artistic(
     paper_size: str = DEFAULT_PAPER_SIZE,
 ):
     color = background_config["color"]
+    line_color = background_config.get("line_color", color)
     bg_path = background_config["path"]
     title_font_path = background_config["title"]["font"].value
     subtitle_font_path = background_config["subtitle"]["font"].value
@@ -161,26 +162,26 @@ def draw_chart_artistic(
     # - anillo exterior de signos
     for r in [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE]:
         ax.plot(np.linspace(0, 2*np.pi, 360), [r]*360,
-                color=color, lw=1.5, alpha=0.8)
+                color=line_color, lw=1.5, alpha=0.8)
 
 
     # Casas (NO llegan al centro)
     for cusp in house_cusps:
         theta = np.deg2rad(cusp) - offset
         ax.plot([theta, theta], [RADIUS_ASPECT_LINES, RADIUS_HOUSES_CIRCLE],
-                color=color, lw=1.0)
+                color=line_color, lw=1.0)
 
     # Signos
     for i, sign in enumerate(ZODIAC_SIGNS):
         angle = np.deg2rad(i * 30 + 15) - offset
         ax.text(angle, RADIUS_SIGN_LABELS, sign,
-                color=color, fontsize=round(20 * scale),
+                color=line_color, fontsize=round(20 * scale),
                 ha="center", va="center")
 
         # líneas divisorias de signos
         div = np.deg2rad(i * 30) - offset
         ax.plot([div, div], [RADIUS_HOUSES_CIRCLE, RADIUS_SIGNS_CIRCLE],
-                color=color, lw=1.5, alpha=0.9)
+                color=line_color, lw=1.5, alpha=0.9)
 
     # Planetas
     for name_p, lon in planets.items():
@@ -189,9 +190,9 @@ def draw_chart_artistic(
 
         ax.text(
             theta,
-            RADIUS_PLANET_SYMBOLS, # offset radial para símbolos de planetas
+            RADIUS_PLANET_SYMBOLS,
             symbol,
-            color=color,
+            color=line_color,
             fontsize=round(17 * scale),
             ha="center",
             va="center"
@@ -201,7 +202,7 @@ def draw_chart_artistic(
     ax.plot(
         np.linspace(0, 2*np.pi, 360),
         [RADIUS_CUSP_RING] * 360,
-        color=color,
+        color=line_color,
         lw=0.8,
         alpha=0.9
     )
@@ -222,7 +223,7 @@ def draw_chart_artistic(
             theta,
             r_house_numbers,
             str(i + 1),
-            color=color,
+            color=line_color,
             fontsize=round(8 * scale),
             ha="center",
             va="center"
@@ -250,7 +251,7 @@ def draw_chart_artistic(
                 t2 = astro_angle(lon_j, asc_deg)
                 # Las líneas de aspecto se dibujan en el anillo interno de aspectos
                 ax.plot([t1, t2], [RADIUS_HOUSE_NUMBERS_RING, RADIUS_HOUSE_NUMBERS_RING],
-                        color=color, lw=2.5, alpha=0.6)
+                        color=line_color, lw=2.5, alpha=0.6)
 
     # ===================================
     # Nombre con fuente personalizada

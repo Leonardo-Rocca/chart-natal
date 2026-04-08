@@ -51,6 +51,13 @@ def background_gallery_selector() -> Background:
     st.sidebar.markdown("---")
 
     selected = next(b for b in BACKGROUNDS if b["id"] == st.session_state.selected_background_id)
+
+    use_custom_line_color = st.sidebar.checkbox("Personalizar color de líneas")
+    if use_custom_line_color:
+        default = selected.get("line_color", selected["color"])
+        picked = st.sidebar.color_picker("Color de líneas", default)
+        selected = {**selected, "line_color": picked}
+
     return selected
 
 import streamlit as st

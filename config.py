@@ -23,6 +23,7 @@ class Background(TypedDict):
     name: str
     path: str
     color: str
+    line_color: NotRequired[str]
     title: FontConfig       # name at top of chart
     subtitle: FontConfig    # date at top of chart
     symbol_size: int        # zodiac glyph size (unicode, no font file)
@@ -39,6 +40,25 @@ BACKGROUNDS: list[Background] = [
         "symbol_size": 60,
         "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
         "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "dark_night_gold", "name": "Dark Night gold",
+        "path": "backgrounds/background.jpg", "color": "#d4b68e",
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
+        "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+    },
+    {
+        "id": "white_night_gold", "name": "White Night",
+        "path": "backgrounds/white_night.png", "color": "#11213c",
+        "title":       {"font": FontID.BIRTHSTONE_BOUNCE, "size": 78},
+        "subtitle":    {"font": FontID.NOW_REGULAR,        "size": 15},
+        "symbol_size": 60,
+        "sign_name":   {"font": FontID.NOW_REGULAR,        "size": 20},
+        "point_label": {"font": FontID.MOON_TIME_REGULAR,  "size": 30},
+        "line_color": "#d4b68e",
     },
     {
         "id": "nebulosa", "name": "Nebulosa",
