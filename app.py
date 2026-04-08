@@ -54,7 +54,12 @@ def background_gallery_selector() -> Background:
 
     use_custom_line_color = st.sidebar.checkbox("Personalizar color de líneas")
     if use_custom_line_color:
-        default = selected.get("line_color", selected["color"])
+        import matplotlib.colors as mcolors
+        raw = selected.get("line_color", selected["color"])
+        try:
+            default = mcolors.to_hex(raw)
+        except ValueError:
+            default = "#ffffff"
         picked = st.sidebar.color_picker("Color de líneas", default)
         selected = {**selected, "line_color": picked}
 
