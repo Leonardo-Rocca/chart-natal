@@ -44,6 +44,7 @@ def background_gallery_selector() -> Background:
 
                 if st.button(label, key=f"btn_{background['id']}", width='stretch', type=btn_type):
                     st.session_state.selected_background_id = background["id"]
+                    st.session_state.custom_line_color = None
                     st.rerun()
             else:
                 st.error(f"Falta: {background['name']}")
@@ -52,16 +53,21 @@ def background_gallery_selector() -> Background:
 
     selected = next(b for b in BACKGROUNDS if b["id"] == st.session_state.selected_background_id)
 
-    use_custom_line_color = st.sidebar.checkbox("Personalizar color de líneas")
+    import matplotlib.colors as mcolors
+    use_custom_line_color = st.sidebar.checkbox("Personalizar color de líneas", key="chk_custom_line_color")
     if use_custom_line_color:
-        import matplotlib.colors as mcolors
         raw = selected.get("line_color", selected["color"])
         try:
             default = mcolors.to_hex(raw)
         except ValueError:
             default = "#ffffff"
-        picked = st.sidebar.color_picker("Color de líneas", default)
+        if st.session_state.get("custom_line_color") is None:
+            st.session_state.custom_line_color = default
+        picked = st.sidebar.color_picker("Color de líneas", st.session_state.custom_line_color, key="color_picker_line")
+        st.session_state.custom_line_color = picked
         selected = {**selected, "line_color": picked}
+    else:
+        st.session_state.custom_line_color = None
 
     return selected
 
@@ -161,19 +167,35 @@ if btn_generate:
 
         if success:
             if os.path.exists("carta_natal.png"):
-                st.image("carta_natal.png", caption=f"Carta Natal de {name}", width='stretch')
-
-                with open("carta_natal.png", "rb") as file:
-                    st.download_button(
-                        label="⬇️ Descargar Imagen",
-                        data=file,
-                        file_name=f"carta_{name}.png",
-                        mime="image/png"
-                    )
+                st.session_state["chart_name"] = name
+                with open("carta_natal.png", "rb") as f:
+                    st.session_state["chart_png"] = f.read()
+                if os.path.exists("carta_natal_cmyk.pdf"):
+                    with open("carta_natal_cmyk.pdf", "rb") as f:
+                        st.session_state["chart_pdf"] = f.read()
             else:
                 st.error("No se encontró el archivo generado.")
 
     except Exception as e:
         st.error(f"Error al generar la carta: {e}")
+
+if "chart_png" in st.session_state:
+    chart_name = st.session_state["chart_name"]
+    st.image(st.session_state["chart_png"], caption=f"Carta Natal de {chart_name}", width='stretch')
+
+    st.download_button(
+        label="⬇️ Descargar Imagen (PNG)",
+        data=st.session_state["chart_png"],
+        file_name=f"carta_{chart_name}.png",
+        mime="image/png"
+    )
+
+    if "chart_pdf" in st.session_state:
+        st.download_button(
+            label="🖨️ Descargar para Imprimir (PDF CMYK)",
+            data=st.session_state["chart_pdf"],
+            file_name=f"carta_{chart_name}_cmyk.pdf",
+            mime="application/pdf"
+        )
 
 

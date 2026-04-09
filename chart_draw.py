@@ -287,6 +287,9 @@ def draw_chart_artistic(
     plt.savefig(out_path, dpi=300)
     plt.close()
 
+    cmyk_path = out_path.replace(".png", "_cmyk.pdf")
+    Image.open(out_path).convert("CMYK").save(cmyk_path, resolution=300)
+
 
 def draw_special_points(ax, asc_deg, planets, color, background_config, y_pos=1.25, language=DEFAULT_LANGUAGE, scale=1.0):
     labels = SPECIAL_POINT_LABELS.get(language, SPECIAL_POINT_LABELS[language])
